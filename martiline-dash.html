@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MARTILINE — Dashboard Ejecutivo</title>
+<meta name="application-name" content="Martiline Dashboard">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Martiline">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#F26522">
+<link rel="manifest" href="data:application/json,%7B%22name%22%3A%22Martiline+Dashboard%22%2C%22short_name%22%3A%22Martiline%22%2C%22description%22%3A%22Dashboard+Ejecutivo+Martiline+SpA%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f0f4f8%22%2C%22theme_color%22%3A%22%23F26522%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg+xmlns%3D%2527http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%2527+viewBox%3D%25270+0+100+100%2527%253E%253Cpolygon+points%3D%252750%2C2+93%2C26+93%2C74+50%2C98+7%2C74+7%2C26%2527+fill%3D%2527%2523F26522%2527%2F%253E%253Ctext+x%3D%252750%2527+y%3D%252566%2527+font-family%3D%2527Arial%2527+font-size%3D%252736%2527+font-weight%3D%2527bold%2527+fill%3D%2527white%2527+text-anchor%3D%2527middle%2527%253EML%253C%2Ftext%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22any%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;700&display=swap');
+
+  /* ── DEFAULT: MODO CLARO ── */
+  :root {
+    --orange: #F26522;
+    --orange-dim: #c4511a;
+    --orange-glow: rgba(242,101,34,0.12);
+    --bg: #f0f4f8;
+    --bg2: #ffffff;
+    --bg3: #e8f0f8;
+    --bg4: #dce8f4;
+    --border: #c8d8e8;
+    --border-bright: #a8c0d8;
+    --text: #2a3f55;
+    --text-dim: #7090a8;
+    --text-bright: #162435;
+    --cyan: #0078b4;
+    --green: #008f48;
+    --yellow: #b07000;
+    --red: #cc2222;
+    --purple: #6a30a0;
+  }
+
+  /* ── MODO OSCURO — Slate #2c3e50 ── */
+  [data-theme="dark"] {
+    --bg: #2c3e50;
+    --bg2: #344a5e;
+    --bg3: #3b536a;
+    --bg4: #435d76;
+    --border: #4a6880;
+    --border-bright: #5a7e9a;
+    --text: #ddeeff;
+    --text-dim: #8ab0c8;
+    --text-bright: #f0f8ff;
+    --cyan: #3dd6f5;
+    --green: #2ecc71;
+    --yellow: #f1c40f;
+    --red: #e74c3c;
+    --purple: #c39bd3;
+  }
+
+  [data-theme="dark"] .topbar {
+    background: linear-gradient(180deg, #243444 0%, #344a5e 100%);
+    box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+  }
+  [data-theme="dark"] .clocks-bar { background: #344a5e; border-bottom-color: #4a6880; }
+  [data-theme="dark"] .left-panel { background: #344a5e; border-right-color: #4a6880; }
+  [data-theme="dark"] .clock-item { border-right-color: #4a6880; }
+  [data-theme="dark"] .clock-item:not(.home) .clock-time { color: #f0f8ff; }
+  [data-theme="dark"] .clock-country { color: #8ab0c8; }
+  [data-theme="dark"] .clock-city { color: #F26522; }
+  [data-theme="dark"] .clock-date { color: #6a90a8; }
+  [data-theme="dark"] .nav-btn { background: #3b536a; border-color: #5a7e9a; color: #ddeeff; }
+  [data-theme="dark"] .nav-btn:hover { background: #435d76; border-color: #F26522; color: #F26522; }
+  [data-theme="dark"] .nav-btn.active { background: #F26522; border-color: #F26522; color: #fff; }
+  [data-theme="dark"] .alert-btn { border-color: #f1c40f; color: #f1c40f; }
+  [data-theme="dark"] .alert-btn:hover { background: #f1c40f; color: #2c3e50; }
+  [data-theme="dark"] .theme-toggle { border-color: #5a7e9a; color: #8ab0c8; }
+  [data-theme="dark"] .section-card { box-shadow: 0 2px 8px rgba(0,0,0,0.2); border-color: #4a6880; }
+  [data-theme="dark"] .section-header { background: #3b536a; border-bottom-color: #4a6880; }
+  [data-theme="dark"] .section-action { background: #435d76; border-color: #5a7e9a; color: #ddeeff; }
+  [data-theme="dark"] .event-item { background: #3b536a; border-color: #4a6880; }
+  [data-theme="dark"] .event-item:hover { background: #435d76; border-color: #5a7e9a; }
+  [data-theme="dark"] .event-title { color: #f0f8ff; }
+  [data-theme="dark"] .event-meta { color: #8ab0c8; }
+  [data-theme="dark"] .event-time { color: #3dd6f5; }
+  [data-theme="dark"] .alert-item .event-time { color: #f1c40f; }
+  [data-theme="dark"] .task-item .event-time { color: #2ecc71; }
+  [data-theme="dark"] .empty-state { color: #6a90a8; }
+  [data-theme="dark"] .modal { background: #344a5e; border-color: #5a7e9a; }
+  [data-theme="dark"] .modal-header { background: #3b536a; border-bottom-color: #4a6880; }
+  [data-theme="dark"] .modal-title { color: #F26522; }
+  [data-theme="dark"] .form-label { color: #8ab0c8; }
+  [data-theme="dark"] .form-input,
+  [data-theme="dark"] .form-select,
+  [data-theme="dark"] .form-textarea { background: #3b536a; border-color: #5a7e9a; color: #f0f8ff; }
+  [data-theme="dark"] .form-input::placeholder,
+  [data-theme="dark"] .form-textarea::placeholder { color: #6a90a8; }
+  [data-theme="dark"] .btn-cancel { border-color: #5a7e9a; color: #8ab0c8; }
+  [data-theme="dark"] .modal-footer { border-top-color: #4a6880; }
+  [data-theme="dark"] .footer { background: #344a5e; border-top-color: #4a6880; color: #6a90a8; }
+  [data-theme="dark"] .cal-day { color: #ddeeff; }
+  [data-theme="dark"] .cal-day.other-month { color: #5a7e9a; }
+  [data-theme="dark"] .cal-day:hover { background: #435d76; color: #f0f8ff; }
+  [data-theme="dark"] .cal-day-name { color: #6a90a8; }
+  [data-theme="dark"] .cal-month { color: #f0f8ff; }
+  [data-theme="dark"] .calendar-widget { background: #3b536a; border-color: #4a6880; }
+  [data-theme="dark"] .cal-header { background: #435d76; border-bottom-color: #4a6880; }
+  [data-theme="dark"] .cal-nav { border-color: #5a7e9a; color: #8ab0c8; }
+  [data-theme="dark"] .cal-nav:hover { border-color: #F26522; color: #F26522; }
+  [data-theme="dark"] .qa-tarea { background: #2980b9; color: #fff; }
+  [data-theme="dark"] .qa-nota { background: #8e44ad; color: #fff; }
+
+  /* overrides light (base) */
+  .topbar { background: linear-gradient(180deg, #e8f0fa 0%, #ffffff 100%); box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+  .clocks-bar { background: #f8fbff; border-bottom-color: #d0e0f0; }
+  .left-panel { background: #f8fbff; border-right-color: #d0e0f0; }
+  .clock-item { border-right-color: #d8e8f4; }
+  .clock-item.home { background: rgba(242,101,34,0.07); }
+  .clock-time { color: var(--orange); }
+  .clock-item:not(.home) .clock-time { color: #1a3050; }
+  .clock-country { color: #5a7890; }
+  .clock-date { color: #8aacbe; }
+  .nav-btn { background: #eef4fa; border-color: #c0d4e8; color: #2a3f55; }
+  .nav-btn:hover { background: #fff; border-color: var(--orange); color: var(--orange); }
+  .nav-btn.active { background: var(--orange); color: #fff !important; border-color: var(--orange); }
+  .alert-btn { border-color: #b07000; color: #b07000; }
+  .alert-btn:hover { background: #b07000; color: #fff; }
+  .section-card { box-shadow: 0 1px 8px rgba(0,0,0,0.07); }
+  .cal-day { color: #2a3f55; }
+  .cal-day.other-month { color: #a0b8cc; }
+  .event-item { background: #f4f8fc; border-color: #d0e0f0; }
+  .event-item:hover { background: #eaf2fa; border-color: #b0c8e0; }
+  .modal { background: #fff; }
+  .modal-header { background: #f4f8fc; }
+  .form-input, .form-select, .form-textarea { background: #f4f8fc; border-color: #c0d4e8; color: #162435; }
+  .footer { background: #f0f4f8; border-top-color: #d0e0f0; }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Exo 2', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    background: linear-gradient(180deg, #0a0f16 0%, var(--bg2) 100%);
+    border-bottom: 2px solid var(--orange);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    height: 60px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(242,101,34,0.15);
+  }
+
+  .logo-hex {
+    width: 40px; height: 40px;
+    background: var(--orange);
+    clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .brand {
+    display: flex; flex-direction: column; line-height: 1;
+  }
+  .brand-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: #fff;
+  }
+  .brand-sub {
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    font-weight: 300;
+  }
+
+  .topbar-nav {
+    display: flex;
+    gap: 6px;
+    margin-left: 12px;
+  }
+
+  .nav-btn {
+    background: var(--bg3);
+    border: 1px solid var(--border-bright);
+    color: var(--text);
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .nav-btn:hover { background: var(--bg4); border-color: var(--orange); color: var(--orange); }
+  .nav-btn.active { background: var(--orange); border-color: var(--orange); color: #fff; }
+
+  .topbar-right {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .install-btn {
+    background: var(--orange);
+    border: none;
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+    animation: pulse-orange 2s infinite;
+  }
+  .install-btn:hover { background: var(--orange-dim); }
+  @keyframes pulse-orange {
+    0%,100% { box-shadow: 0 0 0 0 rgba(242,101,34,0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(242,101,34,0); }
+  }
+
+  .theme-toggle {
+    background: transparent;
+    border: 1px solid var(--border-bright);
+    color: var(--text-dim);
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    padding: 0;
+  }
+  .theme-toggle:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-glow); }
+
+  .alert-btn {
+    background: transparent;
+    border: 1px solid var(--yellow);
+    color: var(--yellow);
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+  }
+  .alert-btn:hover { background: var(--yellow); color: #000; }
+
+  /* ── WORLD CLOCKS ── */
+  .clocks-bar {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .clocks-bar::-webkit-scrollbar { display: none; }
+
+  .clock-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 18px;
+    border-right: 1px solid var(--border);
+    min-width: 100px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .clock-item:last-child { border-right: none; }
+  .clock-item.home { background: rgba(242,101,34,0.06); }
+  .clock-item.home::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--orange);
+  }
+
+  .clock-country {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+  }
+  .clock-city {
+    font-size: 11px;
+    color: var(--orange);
+    font-weight: 600;
+    margin-top: 1px;
+  }
+  .clock-time {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 18px;
+    color: var(--orange);
+    letter-spacing: 1px;
+    margin-top: 2px;
+    line-height: 1;
+  }
+  .clock-item:not(.home) .clock-time { color: var(--text-bright); }
+  .clock-date {
+    font-size: 9px;
+    color: var(--text-dim);
+    margin-top: 2px;
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .main {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 0;
+    min-height: calc(100vh - 120px);
+  }
+
+  /* ── LEFT PANEL ── */
+  .left-panel {
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* ── CALENDAR ── */
+  .calendar-widget {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .cal-header {
+    background: var(--bg4);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cal-nav {
+    background: none;
+    border: 1px solid var(--border-bright);
+    color: var(--text-dim);
+    width: 24px; height: 24px;
+    border-radius: 3px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.2s;
+  }
+  .cal-nav:hover { border-color: var(--orange); color: var(--orange); }
+
+  .cal-month {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--text-bright);
+    text-transform: uppercase;
+  }
+
+  .cal-grid {
+    padding: 12px;
+  }
+
+  .cal-days-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 6px;
+  }
+  .cal-day-name {
+    text-align: center;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    padding: 4px 0;
+  }
+
+  .cal-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+
+  .cal-day {
+    text-align: center;
+    padding: 5px 2px;
+    font-size: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--text);
+    position: relative;
+  }
+  .cal-day:hover { background: var(--bg4); color: var(--text-bright); }
+  .cal-day.other-month { color: var(--text-dim); opacity: 0.4; }
+  .cal-day.today {
+    background: var(--orange);
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 0 10px rgba(242,101,34,0.4);
+  }
+  .cal-day.has-event::after {
+    content: '';
+    position: absolute;
+    bottom: 2px; left: 50%;
+    transform: translateX(-50%);
+    width: 4px; height: 4px;
+    background: var(--cyan);
+    border-radius: 50%;
+  }
+  .cal-day.today.has-event::after { background: #fff; }
+
+  /* ── QUICK ACTIONS ── */
+  .quick-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .qa-btn {
+    flex: 1;
+    padding: 10px 6px;
+    border-radius: 5px;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .qa-evento { background: var(--orange); color: #fff; }
+  .qa-evento:hover { background: var(--orange-dim); }
+  .qa-tarea { background: var(--cyan); color: #000; }
+  .qa-tarea:hover { background: #009fc8; }
+  .qa-nota { background: var(--purple); color: #fff; }
+  .qa-nota:hover { background: #7d3f8e; }
+
+  /* ── RIGHT PANEL ── */
+  .right-panel {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* ── SECTION CARD ── */
+  .section-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .section-header {
+    background: var(--bg3);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title.events { color: var(--cyan); }
+  .section-title.alerts { color: var(--yellow); }
+  .section-title.tasks { color: var(--green); }
+
+  .section-title .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 6px currentColor;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .section-action {
+    background: var(--bg4);
+    border: 1px solid var(--border-bright);
+    color: var(--text);
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .section-action.cyan { border-color: var(--cyan); color: var(--cyan); }
+  .section-action.cyan:hover { background: var(--cyan); color: #000; }
+  .section-action.yellow { border-color: var(--yellow); color: var(--yellow); }
+  .section-action.yellow:hover { background: var(--yellow); color: #000; }
+  .section-action.green { border-color: var(--green); color: var(--green); }
+  .section-action.green:hover { background: var(--green); color: #000; }
+
+  .section-body {
+    padding: 16px;
+    min-height: 90px;
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 70px;
+    color: var(--text-dim);
+    font-size: 13px;
+    gap: 4px;
+    font-style: italic;
+  }
+  .empty-hint {
+    font-size: 11px;
+    opacity: 0.6;
+  }
+
+  /* ── EVENT ITEMS ── */
+  .event-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    margin-bottom: 8px;
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .event-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--cyan);
+  }
+  .event-item:hover { border-color: var(--border-bright); background: var(--bg4); }
+  .event-item.alert-item::before { background: var(--yellow); }
+  .event-item.task-item::before { background: var(--green); }
+  .event-item.task-item.done { opacity: 0.5; }
+  .event-item.task-item.done .event-title { text-decoration: line-through; }
+
+  .event-time {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--cyan);
+    white-space: nowrap;
+    min-width: 44px;
+    margin-top: 2px;
+  }
+  .alert-item .event-time { color: var(--yellow); }
+  .task-item .event-time { color: var(--green); }
+
+  .event-info { flex: 1; }
+  .event-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 2px;
+  }
+  .event-meta {
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .event-delete {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    opacity: 0;
+    transition: all 0.2s;
+  }
+  .event-item:hover .event-delete { opacity: 1; }
+  .event-delete:hover { background: rgba(255,68,68,0.15); color: var(--red); }
+
+  .task-check {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--green);
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: var(--green);
+    transition: all 0.15s;
+  }
+  .task-check:hover { background: rgba(0,232,122,0.1); }
+  .done .task-check { background: var(--green); color: #000; }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-left: 8px;
+  }
+  .badge-orange { background: rgba(242,101,34,0.2); color: var(--orange); border: 1px solid var(--orange); }
+  .badge-yellow { background: rgba(255,208,64,0.15); color: var(--yellow); border: 1px solid var(--yellow); }
+  .badge-red { background: rgba(255,68,68,0.15); color: var(--red); border: 1px solid var(--red); }
+  .badge-green { background: rgba(0,232,122,0.15); color: var(--green); border: 1px solid var(--green); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--bg2);
+    border: 1px solid var(--border-bright);
+    border-top: 2px solid var(--orange);
+    border-radius: 8px;
+    width: 440px;
+    max-width: 95vw;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    overflow: hidden;
+    animation: modalIn 0.2s ease;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(-20px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .modal-header {
+    background: var(--bg3);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .modal-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--orange);
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 18px;
+    padding: 0 4px;
+    transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--text-bright); }
+
+  .modal-body { padding: 20px; }
+
+  .form-group {
+    margin-bottom: 14px;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border-bright);
+    color: var(--text-bright);
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 13px;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 2px var(--orange-glow);
+  }
+  .form-textarea { resize: vertical; min-height: 72px; }
+  .form-select option { background: var(--bg3); }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .modal-footer {
+    padding: 14px 18px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .btn-cancel {
+    background: transparent;
+    border: 1px solid var(--border-bright);
+    color: var(--text-dim);
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .btn-cancel:hover { border-color: var(--text-dim); color: var(--text); }
+
+  .btn-save {
+    background: var(--orange);
+    border: none;
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+  .btn-save:hover { background: var(--orange-dim); }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--bg2);
+    border-top: 2px solid var(--border);
+    padding: 10px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .footer-brand {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .footer-brand .f-name { color: var(--orange); }
+  .footer-brand .f-sep { color: var(--border-bright); margin: 0 2px; }
+  .footer-copy {
+    font-size: 9px;
+    color: var(--text-dim);
+    opacity: 0.75;
+    letter-spacing: 0.3px;
+    text-align: center;
+    line-height: 1.6;
+  }
+  [data-theme="dark"] .footer-copy { opacity: 0.55; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--orange-dim); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .main { grid-template-columns: 1fr; }
+    .left-panel { border-right: none; border-bottom: 1px solid var(--border); }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo-hex">ML</div>
+  <div class="brand">
+    <div class="brand-name">MARTILINE</div>
+    <div class="brand-sub">Freight Forwarding · Chile · Perú</div>
+  </div>
+  <div class="topbar-nav">
+    <button class="nav-btn active" onclick="showSection('agenda')">📅 AGENDA</button>
+    <button class="nav-btn" onclick="openGmail()">✉️ GMAIL</button>
+    <button class="nav-btn" onclick="window.open('https://lc1733.github.io/martiline-translate','_blank')">🌐 TRADUCTOR</button>
+    <button class="nav-btn" onclick="window.open('https://flow.cargoes.com/flow/','_blank')">🚢 TRACKING</button>
+  </div>
+  <div class="topbar-right">
+    <button class="install-btn" id="pwa-topbar-btn" onclick="triggerInstall()" title="Instalar como app en este equipo" style="display:none">⬇ INSTALAR APP</button>
+    <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Modo claro/oscuro">🌙</button>
+    <button class="alert-btn" onclick="openModal('alert')">⚠ Nueva Alerta</button>
+  </div>
+</div>
+
+<!-- WORLD CLOCKS -->
+<div class="clocks-bar" id="clocks-bar">
+  <!-- generated by JS -->
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- LEFT: CALENDAR -->
+  <div class="left-panel">
+    <div class="calendar-widget">
+      <div class="cal-header">
+        <button class="cal-nav" onclick="changeMonth(-1)">‹</button>
+        <div class="cal-month" id="cal-month-label">ABRIL 2026</div>
+        <button class="cal-nav" onclick="changeMonth(1)">›</button>
+      </div>
+      <div class="cal-grid">
+        <div class="cal-days-header">
+          <div class="cal-day-name">LU</div>
+          <div class="cal-day-name">MA</div>
+          <div class="cal-day-name">MI</div>
+          <div class="cal-day-name">JU</div>
+          <div class="cal-day-name">VI</div>
+          <div class="cal-day-name">SA</div>
+          <div class="cal-day-name">DO</div>
+        </div>
+        <div class="cal-days" id="cal-days"></div>
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <button class="qa-btn qa-evento" onclick="openModal('event')">+ EVENTO</button>
+      <button class="qa-btn qa-tarea" onclick="openModal('task')">+ TAREA</button>
+      <button class="qa-btn qa-nota" onclick="openModal('note')">+ NOTA</button>
+    </div>
+  </div>
+
+  <!-- RIGHT: SECTIONS -->
+  <div class="right-panel">
+
+    <!-- EVENTOS HOY -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title events">
+          <div class="dot"></div>
+          📋 EVENTOS — HOY
+        </div>
+        <button class="section-action cyan" onclick="openModal('event')">+ AGREGAR</button>
+      </div>
+      <div class="section-body" id="events-body">
+        <div class="empty-state">
+          Sin eventos para este día.
+          <div class="empty-hint">Usa + para agregar.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALERTAS PRÓXIMAS -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title alerts">
+          <div class="dot"></div>
+          ⚠ ALERTAS PRÓXIMAS — 14 DÍAS
+        </div>
+        <button class="section-action yellow" onclick="openModal('alert')">+ ALERTA ETD/ETA</button>
+      </div>
+      <div class="section-body" id="alerts-body">
+        <div class="empty-state">
+          Sin alertas próximas (14 días).
+          <div class="empty-hint">Usa + Alerta ETD/ETA para agregar.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAREAS PENDIENTES -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-title tasks">
+          <div class="dot"></div>
+          ► TAREAS PENDIENTES
+        </div>
+        <button class="section-action green" onclick="openModal('task')">+ TAREA</button>
+      </div>
+      <div class="section-body" id="tasks-body">
+        <div class="empty-state">
+          Sin tareas pendientes.
+          <div class="empty-hint">Usa + Tarea para agregar.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-brand">
+    <span class="f-name">MARTILINE SpA</span>
+    <span class="f-sep">·</span>
+    <span>Dashboard Ejecutivo v2.0</span>
+    <span class="f-sep">·</span>
+    <span>Chile · Perú</span>
+    <span class="f-sep">·</span>
+    <span>Datos locales · Uso interno</span>
+  </div>
+  <div class="footer-copy">
+    © <span id="footer-year"></span> Luis Cartes Henríquez · Creación original protegida — Convenio de Berna / OMPI · Prohibida su reproducción, adaptación o uso en entrenamiento de IA sin autorización expresa.
+  </div>
+</div>
+<script>document.getElementById('footer-year').textContent = new Date().getFullYear();</script>
+
+<!-- ── MODAL EVENTO ── -->
+<div class="modal-overlay" id="modal-event">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">📋 Nuevo Evento</div>
+      <button class="modal-close" onclick="closeModal('event')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Título</label>
+        <input class="form-input" id="ev-title" type="text" placeholder="Reunión, llamada, despacho...">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Fecha</label>
+          <input class="form-input" id="ev-date" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Hora</label>
+          <input class="form-input" id="ev-time" type="time">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Descripción</label>
+        <textarea class="form-textarea" id="ev-desc" placeholder="Detalles adicionales..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('event')">Cancelar</button>
+      <button class="btn-save" onclick="saveEvent()">GUARDAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL ALERTA ETD/ETA ── -->
+<div class="modal-overlay" id="modal-alert">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">⚠ Alerta ETD / ETA</div>
+      <button class="modal-close" onclick="closeModal('alert')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Booking / Ref</label>
+          <input class="form-input" id="al-ref" type="text" placeholder="BK-2026-XXXX">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Cliente</label>
+          <input class="form-input" id="al-client" type="text" placeholder="VULCO, SANDVIK...">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Tipo</label>
+          <select class="form-select" id="al-type">
+            <option value="ETD">ETD — Salida</option>
+            <option value="ETA">ETA — Arribo</option>
+            <option value="CUTOFF">Cut-Off Documental</option>
+            <option value="VENCIMIENTO">Vencimiento</option>
+            <option value="OTRO">Otro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Fecha</label>
+          <input class="form-input" id="al-date" type="date">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notas</label>
+        <textarea class="form-textarea" id="al-notes" placeholder="Puerto de origen/destino, nave, instrucciones..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('alert')">Cancelar</button>
+      <button class="btn-save" onclick="saveAlert()">GUARDAR ALERTA</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL TAREA ── -->
+<div class="modal-overlay" id="modal-task">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">✓ Nueva Tarea</div>
+      <button class="modal-close" onclick="closeModal('task')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Tarea</label>
+        <input class="form-input" id="tk-title" type="text" placeholder="Qué hay que hacer...">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Vence</label>
+          <input class="form-input" id="tk-due" type="date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Prioridad</label>
+          <select class="form-select" id="tk-priority">
+            <option value="normal">Normal</option>
+            <option value="alta">Alta</option>
+            <option value="urgente">Urgente</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Descripción</label>
+        <textarea class="form-textarea" id="tk-desc" placeholder="Detalles..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('task')">Cancelar</button>
+      <button class="btn-save" onclick="saveTask()">GUARDAR TAREA</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL NOTA ── -->
+<div class="modal-overlay" id="modal-note">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">📝 Nueva Nota</div>
+      <button class="modal-close" onclick="closeModal('note')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Título</label>
+        <input class="form-input" id="nt-title" type="text" placeholder="Nombre de la nota...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contenido</label>
+        <textarea class="form-textarea" id="nt-content" style="min-height:120px" placeholder="Escribe aquí tu nota..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('note')">Cancelar</button>
+      <button class="btn-save" onclick="saveNote()">GUARDAR NOTA</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  WORLD CLOCKS
+// ═══════════════════════════════════════════════════
+const CLOCKS = [
+  { code:'CL', country:'CHILE',    city:'Santiago',  tz:'America/Santiago',       home:true  },
+  { code:'PE', country:'PERU',     city:'Lima',       tz:'America/Lima'                       },
+  { code:'MX', country:'MEXICO',   city:'Mexico DF',  tz:'America/Mexico_City'                },
+  { code:'US', country:'USA',      city:'New York',   tz:'America/New_York'                   },
+  { code:'CA', country:'CANADA',   city:'Toronto',    tz:'America/Toronto'                    },
+  { code:'NL', country:'HOLANDA',  city:'Amsterdam',  tz:'Europe/Amsterdam'                   },
+  { code:'ES', country:'ESPAÑA',   city:'Madrid',     tz:'Europe/Madrid'                      },
+  { code:'IN', country:'INDIA',    city:'Mumbai',     tz:'Asia/Kolkata'                       },
+  { code:'CN', country:'CHINA',    city:'Shanghai',   tz:'Asia/Shanghai'                      },
+  { code:'MY', country:'MALASIA',  city:'K. Lumpur',  tz:'Asia/Kuala_Lumpur'                  },
+  { code:'AU', country:'AUSTRALIA',city:'Sydney',     tz:'Australia/Sydney'                   },
+];
+
+function renderClocks() {
+  const bar = document.getElementById('clocks-bar');
+  const now = new Date();
+  bar.innerHTML = CLOCKS.map(c => {
+    const t = new Intl.DateTimeFormat('es-CL',{
+      timeZone: c.tz, hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false
+    }).format(now);
+    const d = new Intl.DateTimeFormat('es-CL',{
+      timeZone: c.tz, weekday:'short', day:'numeric', month:'short'
+    }).format(now);
+    return `<div class="clock-item${c.home?' home':''}">
+      <div class="clock-country">${c.code}</div>
+      <div class="clock-city">${c.country}</div>
+      <div style="font-size:10px;color:var(--text-dim)">${c.city}</div>
+      <div class="clock-time" id="ct-${c.code}">${t}</div>
+      <div class="clock-date">${d}</div>
+    </div>`;
+  }).join('');
+}
+
+function tickClocks() {
+  const now = new Date();
+  CLOCKS.forEach(c => {
+    const el = document.getElementById('ct-'+c.code);
+    if (!el) return;
+    el.textContent = new Intl.DateTimeFormat('es-CL',{
+      timeZone: c.tz, hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false
+    }).format(now);
+  });
+}
+
+renderClocks();
+setInterval(tickClocks, 1000);
+
+// ═══════════════════════════════════════════════════
+//  CALENDAR
+// ═══════════════════════════════════════════════════
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+const today = new Date();
+
+const MONTHS_ES = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO',
+                   'JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
+
+function getDaysWithEvents() {
+  const events = loadData('events');
+  const days = new Set();
+  events.forEach(e => {
+    if (e.date) days.add(e.date);
+  });
+  return days;
+}
+
+function renderCalendar() {
+  document.getElementById('cal-month-label').textContent = `${MONTHS_ES[calMonth]} ${calYear}`;
+
+  const firstDay = new Date(calYear, calMonth, 1);
+  const lastDay = new Date(calYear, calMonth+1, 0);
+
+  // Monday=0 offset
+  let startDow = firstDay.getDay(); // 0=Sun
+  startDow = (startDow === 0) ? 6 : startDow - 1;
+
+  const eventDays = getDaysWithEvents();
+  const grid = document.getElementById('cal-days');
+  let html = '';
+
+  // Prev month padding
+  const prevLast = new Date(calYear, calMonth, 0).getDate();
+  for (let i = startDow - 1; i >= 0; i--) {
+    html += `<div class="cal-day other-month">${prevLast - i}</div>`;
+  }
+
+  // Current month
+  for (let d = 1; d <= lastDay.getDate(); d++) {
+    const isToday = (d === today.getDate() && calMonth === today.getMonth() && calYear === today.getFullYear());
+    const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const hasEv = eventDays.has(dateStr);
+    html += `<div class="cal-day${isToday?' today':''}${hasEv?' has-event':''}"
+      onclick="selectCalDay('${dateStr}')">${d}</div>`;
+  }
+
+  // Next month padding
+  const total = startDow + lastDay.getDate();
+  const rem = (7 - (total % 7)) % 7;
+  for (let d = 1; d <= rem; d++) {
+    html += `<div class="cal-day other-month">${d}</div>`;
+  }
+
+  grid.innerHTML = html;
+}
+
+function changeMonth(dir) {
+  calMonth += dir;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+
+function selectCalDay(dateStr) {
+  renderEventsForDate(dateStr);
+}
+
+renderCalendar();
+
+// ═══════════════════════════════════════════════════
+//  LOCAL STORAGE
+// ═══════════════════════════════════════════════════
+function loadData(key) {
+  try { return JSON.parse(localStorage.getItem('ml_'+key) || '[]'); }
+  catch { return []; }
+}
+
+function saveData(key, data) {
+  localStorage.setItem('ml_'+key, JSON.stringify(data));
+}
+
+// ═══════════════════════════════════════════════════
+//  EVENTS
+// ═══════════════════════════════════════════════════
+function todayStr() {
+  return today.toISOString().split('T')[0];
+}
+
+function renderEventsForDate(dateStr) {
+  const events = loadData('events').filter(e => e.date === dateStr);
+  const body = document.getElementById('events-body');
+  if (!events.length) {
+    body.innerHTML = `<div class="empty-state">Sin eventos para este día.<div class="empty-hint">Usa + para agregar.</div></div>`;
+    return;
+  }
+  body.innerHTML = events.sort((a,b) => (a.time||'').localeCompare(b.time||'')).map(e => `
+    <div class="event-item">
+      <div class="event-time">${e.time || '—'}</div>
+      <div class="event-info">
+        <div class="event-title">${e.title}</div>
+        ${e.desc ? `<div class="event-meta">${e.desc}</div>` : ''}
+      </div>
+      <button class="event-delete" onclick="deleteItem('events','${e.id}')">✕</button>
+    </div>`).join('');
+}
+
+function renderTodayEvents() {
+  renderEventsForDate(todayStr());
+}
+
+function saveEvent() {
+  const title = document.getElementById('ev-title').value.trim();
+  const date  = document.getElementById('ev-date').value;
+  const time  = document.getElementById('ev-time').value;
+  const desc  = document.getElementById('ev-desc').value.trim();
+  if (!title || !date) { alert('Completa título y fecha'); return; }
+  const events = loadData('events');
+  events.push({ id: Date.now().toString(), title, date, time, desc });
+  saveData('events', events);
+  closeModal('event');
+  renderTodayEvents();
+  renderCalendar();
+  document.getElementById('ev-title').value='';
+  document.getElementById('ev-time').value='';
+  document.getElementById('ev-desc').value='';
+}
+
+// ═══════════════════════════════════════════════════
+//  ALERTS
+// ═══════════════════════════════════════════════════
+const PRIORITY_MAP = { ETD:'badge-orange', ETA:'badge-green', CUTOFF:'badge-red', VENCIMIENTO:'badge-red', OTRO:'badge-yellow' };
+
+function renderAlerts() {
+  const alerts = loadData('alerts');
+  const tDate = new Date(); tDate.setHours(0,0,0,0);
+  const limit = new Date(tDate); limit.setDate(limit.getDate()+14);
+
+  const upcoming = alerts.filter(a => {
+    if (!a.date) return false;
+    const d = new Date(a.date+'T00:00:00');
+    return d >= tDate && d <= limit;
+  }).sort((a,b) => a.date.localeCompare(b.date));
+
+  const body = document.getElementById('alerts-body');
+  if (!upcoming.length) {
+    body.innerHTML = `<div class="empty-state">Sin alertas próximas (14 días).<div class="empty-hint">Usa + Alerta ETD/ETA para agregar.</div></div>`;
+    return;
+  }
+  body.innerHTML = upcoming.map(a => `
+    <div class="event-item alert-item">
+      <div class="event-time">${a.date}</div>
+      <div class="event-info">
+        <div class="event-title">${a.ref || ''} ${a.client ? '— '+a.client : ''}
+          <span class="badge ${PRIORITY_MAP[a.type]||'badge-yellow'}">${a.type}</span>
+        </div>
+        ${a.notes ? `<div class="event-meta">${a.notes}</div>` : ''}
+      </div>
+      <button class="event-delete" onclick="deleteItem('alerts','${a.id}')">✕</button>
+    </div>`).join('');
+}
+
+function saveAlert() {
+  const ref    = document.getElementById('al-ref').value.trim();
+  const client = document.getElementById('al-client').value.trim();
+  const type   = document.getElementById('al-type').value;
+  const date   = document.getElementById('al-date').value;
+  const notes  = document.getElementById('al-notes').value.trim();
+  if (!date) { alert('Ingresa la fecha'); return; }
+  const alerts = loadData('alerts');
+  alerts.push({ id: Date.now().toString(), ref, client, type, date, notes });
+  saveData('alerts', alerts);
+  closeModal('alert');
+  renderAlerts();
+  ['al-ref','al-client','al-notes'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('al-date').value='';
+}
+
+// ═══════════════════════════════════════════════════
+//  TASKS
+// ═══════════════════════════════════════════════════
+const PRIORITY_BADGE = { normal:'', alta:'badge-yellow', urgente:'badge-red' };
+const PRIORITY_LABEL = { normal:'', alta:'ALTA', urgente:'URGENTE' };
+
+function renderTasks() {
+  const tasks = loadData('tasks');
+  const pending = tasks.filter(t => !t.done);
+  const body = document.getElementById('tasks-body');
+  if (!pending.length) {
+    body.innerHTML = `<div class="empty-state">Sin tareas pendientes.<div class="empty-hint">Usa + Tarea para agregar.</div></div>`;
+    return;
+  }
+  body.innerHTML = pending.map(t => `
+    <div class="event-item task-item${t.done?' done':''}" id="task-${t.id}">
+      <div class="task-check" onclick="toggleTask('${t.id}')">${t.done?'✓':''}</div>
+      <div class="event-info">
+        <div class="event-title">${t.title}
+          ${t.priority && t.priority!=='normal' ? `<span class="badge ${PRIORITY_BADGE[t.priority]}">${PRIORITY_LABEL[t.priority]}</span>` : ''}
+        </div>
+        ${t.due ? `<div class="event-meta">Vence: ${t.due}${t.desc ? ' · '+t.desc : ''}</div>` : (t.desc ? `<div class="event-meta">${t.desc}</div>` : '')}
+      </div>
+      <button class="event-delete" onclick="deleteItem('tasks','${t.id}')">✕</button>
+    </div>`).join('');
+}
+
+function saveTask() {
+  const title    = document.getElementById('tk-title').value.trim();
+  const due      = document.getElementById('tk-due').value;
+  const priority = document.getElementById('tk-priority').value;
+  const desc     = document.getElementById('tk-desc').value.trim();
+  if (!title) { alert('Ingresa el nombre de la tarea'); return; }
+  const tasks = loadData('tasks');
+  tasks.push({ id: Date.now().toString(), title, due, priority, desc, done: false });
+  saveData('tasks', tasks);
+  closeModal('task');
+  renderTasks();
+  document.getElementById('tk-title').value='';
+  document.getElementById('tk-due').value='';
+  document.getElementById('tk-desc').value='';
+}
+
+function toggleTask(id) {
+  const tasks = loadData('tasks');
+  const t = tasks.find(x => x.id===id);
+  if (t) { t.done = !t.done; saveData('tasks', tasks); renderTasks(); }
+}
+
+function saveNote() {
+  const title   = document.getElementById('nt-title').value.trim();
+  const content = document.getElementById('nt-content').value.trim();
+  if (!title) { alert('Ingresa un título'); return; }
+  // Save as task-type note for now
+  const tasks = loadData('tasks');
+  tasks.push({ id: Date.now().toString(), title: '📝 '+title, due:'', priority:'normal', desc:content, done:false });
+  saveData('tasks', tasks);
+  closeModal('note');
+  renderTasks();
+  document.getElementById('nt-title').value='';
+  document.getElementById('nt-content').value='';
+}
+
+// ═══════════════════════════════════════════════════
+//  DELETE
+// ═══════════════════════════════════════════════════
+function deleteItem(type, id) {
+  const data = loadData(type).filter(x => x.id !== id);
+  saveData(type, data);
+  if (type==='events') renderTodayEvents();
+  if (type==='alerts') renderAlerts();
+  if (type==='tasks') renderTasks();
+  renderCalendar();
+}
+
+// ═══════════════════════════════════════════════════
+//  MODAL
+// ═══════════════════════════════════════════════════
+function openModal(type) {
+  // Pre-fill date fields with today
+  const tStr = todayStr();
+  if (type==='event') document.getElementById('ev-date').value = tStr;
+  if (type==='alert') document.getElementById('al-date').value = tStr;
+  if (type==='task')  document.getElementById('tk-due').value  = tStr;
+
+  document.getElementById('modal-'+type).classList.add('open');
+}
+
+function closeModal(type) {
+  document.getElementById('modal-'+type).classList.remove('open');
+}
+
+// Close on overlay click
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+});
+
+// ═══════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════
+function showSection(s) { /* placeholder for future tabs */ }
+
+// ═══════════════════════════════════════════════════
+//  GMAIL — abre cuenta martiline@martiline.com
+//  Google indexa cuentas Workspace: /u/0/ es la primera
+//  cuenta logueada. Si tiene múltiples cuentas, puede
+//  ser /u/1/ o /u/2/. Abre la bandeja de entrada.
+// ═══════════════════════════════════════════════════
+function openGmail() {
+  // Intenta abrir directamente la cuenta martiline@martiline.com
+  // La URL authuser= fuerza la cuenta correcta si hay múltiples sesiones
+  window.open('https://mail.google.com/mail/u/0/?authuser=martiline@martiline.com#inbox', '_blank');
+}
+
+// ═══════════════════════════════════════════════════
+//  THEME TOGGLE
+// ═══════════════════════════════════════════════════
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn = document.getElementById('theme-toggle');
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  if (isDark) {
+    html.removeAttribute('data-theme');
+    btn.textContent = '🌙';
+    btn.title = 'Cambiar a modo oscuro';
+    localStorage.setItem('ml_theme', 'light');
+  } else {
+    html.setAttribute('data-theme', 'dark');
+    btn.textContent = '☀';
+    btn.title = 'Cambiar a modo claro';
+    localStorage.setItem('ml_theme', 'dark');
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  PWA INSTALL PROMPT
+// ═══════════════════════════════════════════════════
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // Show install button in topbar
+  const btn = document.getElementById('pwa-topbar-btn');
+  if (btn) btn.style.display = 'flex';
+});
+
+window.addEventListener('appinstalled', () => {
+  const btn = document.getElementById('pwa-topbar-btn');
+  if (btn) { btn.textContent = '✓ INSTALADA'; btn.style.background = '#008f48'; setTimeout(()=>btn.style.display='none', 3000); }
+  deferredPrompt = null;
+});
+
+async function triggerInstall() {
+  if (!deferredPrompt) {
+    alert('Para instalar esta app:\n\n📱 iPhone/iPad: Safari → Compartir → "Agregar a pantalla de inicio"\n💻 Chrome/Edge PC: Menú (⋮) → "Instalar Martiline Dashboard"\n🤖 Android: Chrome → Menú → "Instalar app" o "Agregar a pantalla de inicio"');
+    return;
+  }
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+}
+
+// Restore saved theme
+(function() {
+  const saved = localStorage.getItem('ml_theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    const btn = document.getElementById('theme-toggle');
+    if (btn) { btn.textContent = '☀'; btn.title = 'Cambiar a modo claro'; }
+  }
+})();
+
+renderTodayEvents();
+renderAlerts();
+renderTasks();
+
+// ── SERVICE WORKER (PWA offline support) ──
+if ('serviceWorker' in navigator) {
+  const swCode = `
+self.addEventListener('install', e => { self.skipWaiting(); });
+self.addEventListener('activate', e => { clients.claim(); });
+self.addEventListener('fetch', e => {
+  e.respondWith(fetch(e.request).catch(() => new Response('Offline', {status: 503})));
+});`;
+  const blob = new Blob([swCode], {type: 'application/javascript'});
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl).catch(() => {});
+}
+</script>
+</body>
+</html>
