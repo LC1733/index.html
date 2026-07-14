@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Unit 6 — Guía de Estudio Interactiva</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FAF8F1;
+  --grid:#DCE7ED;
+  --ink:#1E2A45;
+  --ink-soft:#4A5875;
+  --redpen:#C0392B;
+  --margin-red:#E8A9A1;
+  --hi:#FFE066;
+  --green:#2E7D4F;
+  --card:#FFFFFF;
+  --shadow:0 2px 10px rgba(30,42,69,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Nunito Sans',sans-serif;
+  color:var(--ink);
+  background:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+    var(--paper);
+  background-size:26px 26px, 26px 26px, auto;
+  min-height:100vh;
+  line-height:1.55;
+}
+.notebook{
+  max-width:880px;margin:0 auto;padding:28px 20px 60px;
+  position:relative;
+}
+.notebook::before{ /* línea roja de margen, como cuaderno escolar */
+  content:'';position:fixed;top:0;bottom:0;left:max(12px, calc(50% - 470px));
+  width:2px;background:var(--margin-red);opacity:.7;pointer-events:none;
+}
+header h1{
+  font-family:'Caveat',cursive;font-size:2.6rem;color:var(--ink);line-height:1.1;
+}
+header .sub{color:var(--ink-soft);font-weight:600;margin-top:4px}
+.hi{background:linear-gradient(transparent 45%, var(--hi) 45%, var(--hi) 90%, transparent 90%);padding:0 2px}
+
+/* Tabs como separadores de cuaderno */
+nav{display:flex;flex-wrap:wrap;gap:6px;margin:26px 0 0;border-bottom:2px solid var(--ink)}
+nav button{
+  font-family:'Nunito Sans',sans-serif;font-weight:800;font-size:.85rem;
+  padding:9px 14px;border:2px solid var(--ink);border-bottom:none;
+  border-radius:8px 8px 0 0;background:#EFEAE0;color:var(--ink-soft);cursor:pointer;
+}
+nav button.active{background:var(--ink);color:var(--paper)}
+nav button:focus-visible{outline:3px solid var(--redpen);outline-offset:2px}
+section{display:none;padding-top:22px}
+section.active{display:block}
+h2{font-family:'Caveat',cursive;font-size:2rem;margin:14px 0 8px}
+h3{font-size:1.02rem;font-weight:800;margin:18px 0 6px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft)}
+p{margin:8px 0}
+.note{
+  background:var(--card);border:2px solid var(--ink);border-radius:10px;
+  padding:14px 16px;margin:12px 0;box-shadow:var(--shadow);
+}
+.note.red{border-color:var(--redpen)}
+.note.red h3{color:var(--redpen)}
+.tag{display:inline-block;font-size:.72rem;font-weight:800;padding:2px 9px;border-radius:20px;
+  background:var(--ink);color:var(--paper);margin-right:6px;vertical-align:middle}
+.tag.get{background:#2E5E8C}.tag.take{background:#7A4A9E}.tag.have{background:#B06A1F}
+table{width:100%;border-collapse:collapse;margin:10px 0;background:var(--card);box-shadow:var(--shadow)}
+th,td{border:1.5px solid var(--ink);padding:8px 10px;text-align:left;font-size:.92rem}
+th{background:var(--ink);color:var(--paper)}
+em.sig{font-style:normal;background:var(--hi);padding:0 3px;font-weight:700}
+
+/* Tarjetas de condicionales (código de colores: zero=verde, first=azul, second=naranja, third=morado) */
+.cond-card{
+  background:var(--card);border:2px solid var(--ink);border-left-width:10px;
+  border-radius:10px;padding:14px 16px;margin:14px 0;box-shadow:var(--shadow);
+}
+.c-zero{border-left-color:#2E8B57}
+.c-first{border-left-color:#2E5E8C}
+.c-second{border-left-color:#E07B39}
+.c-third{border-left-color:#7A4A9E}
+.cond-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;margin-bottom:4px}
+.cond-name{font-weight:800;font-size:1.05rem;letter-spacing:.02em}
+.c-zero .cond-name{color:#2E8B57}
+.c-first .cond-name{color:#2E5E8C}
+.c-second .cond-name{color:#E07B39}
+.c-third .cond-name{color:#7A4A9E}
+.cond-use{font-size:.82rem;font-weight:700;color:var(--ink-soft)}
+.cond-desc{font-size:.9rem;margin:4px 0 8px}
+.cond-formula{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0}
+.fx{font-weight:800;font-size:.86rem;padding:5px 12px;border-radius:8px}
+.fx.if{background:#FDEBC8;border:1.5px solid #E0A93E}
+.fx.main{background:#EBE3F5;border:1.5px solid #7A4A9E}
+.fx.arrow{background:none;padding:0;font-size:1.1rem;color:var(--ink-soft)}
+.cond-ex{margin:8px 0 6px 20px;font-size:.92rem}
+.cond-ex li{margin:3px 0;cursor:pointer}
+.cond-ex li::after{content:' 👆';font-size:.7rem;opacity:.45}
+.cond-ex li.open::after{content:''}
+.cond-ex .tr{display:none;color:var(--ink-soft);font-style:italic;font-size:.88rem;padding-left:4px}
+.cond-ex li.open .tr{display:block}
+.cond-equiv{font-size:.85rem;background:#F0F4EA;border-left:4px solid #2E8B57;padding:6px 10px;margin:8px 0;border-radius:0 6px 6px 0}
+.cond-sig{font-size:.8rem;color:var(--ink-soft);margin-top:6px}
+.tip-note{border-color:#E0A93E;background:#FFFBEA}
+.qsum{font-size:.85rem}
+.qsum td,.qsum th{padding:6px 8px}
+.r-zero td:first-child{color:#2E8B57}
+.r-first td:first-child{color:#2E5E8C}
+.r-second td:first-child{color:#E07B39}
+.r-third td:first-child{color:#7A4A9E}
+
+/* Flashcards */
+.fc-controls{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.btn{
+  font-family:inherit;font-weight:800;font-size:.9rem;padding:9px 16px;
+  border:2px solid var(--ink);border-radius:8px;background:var(--card);color:var(--ink);
+  cursor:pointer;box-shadow:2px 2px 0 var(--ink);
+}
+.btn:active{transform:translate(2px,2px);box-shadow:none}
+.btn.primary{background:var(--ink);color:var(--paper)}
+.btn.red{border-color:var(--redpen);color:var(--redpen);box-shadow:2px 2px 0 var(--redpen)}
+.btn:focus-visible{outline:3px solid var(--redpen);outline-offset:2px}
+.flashcard{
+  margin:14px auto;max-width:480px;height:190px;perspective:1000px;cursor:pointer;
+}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flashcard.flipped .fc-inner{transform:rotateY(180deg)}
+.fc-face{
+  position:absolute;inset:0;backface-visibility:hidden;border:2px solid var(--ink);
+  border-radius:12px;background:var(--card);box-shadow:var(--shadow);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:18px;text-align:center;
+}
+.fc-face .word{font-size:1.5rem;font-weight:800}
+.fc-face .lang{font-size:.72rem;font-weight:800;letter-spacing:.1em;color:var(--ink-soft);margin-bottom:8px}
+.fc-back{transform:rotateY(180deg);background:#FFFBEA}
+.fc-meta{text-align:center;color:var(--ink-soft);font-weight:700;font-size:.85rem}
+@media (prefers-reduced-motion: reduce){.fc-inner{transition:none}}
+
+/* Ejercicios */
+.ex{margin:14px 0;padding:12px 14px;background:var(--card);border:1.5px solid var(--ink);border-radius:10px}
+.ex .q{font-weight:600}
+.ex input[type=text]{
+  font-family:inherit;font-size:.95rem;padding:6px 10px;border:none;border-bottom:2px dashed var(--ink);
+  background:transparent;min-width:170px;color:var(--redpen);font-weight:700;
+}
+.ex input[type=text]:focus{outline:none;border-bottom-color:var(--redpen)}
+.feedback{font-weight:800;margin-left:8px}
+.feedback.ok{color:var(--green)}
+.feedback.bad{color:var(--redpen)}
+.choices{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.choices button{
+  font-family:inherit;font-weight:700;font-size:.82rem;padding:5px 12px;
+  border:1.5px solid var(--ink);border-radius:20px;background:var(--paper);cursor:pointer;
+}
+.choices button.picked-ok{background:var(--green);color:#fff;border-color:var(--green)}
+.choices button.picked-bad{background:var(--redpen);color:#fff;border-color:var(--redpen)}
+.reveal{display:none;margin-top:8px;padding:8px 10px;background:#FFFBEA;border-left:4px solid var(--redpen);font-size:.92rem}
+.reveal.show{display:block}
+.strike{text-decoration:line-through;text-decoration-color:var(--redpen);text-decoration-thickness:2px}
+.fix{color:var(--green);font-weight:800}
+.score{font-family:'Caveat',cursive;font-size:1.6rem;margin-top:14px}
+
+/* Writing scaffold */
+.scaffold{counter-reset:par}
+.scaffold .par{position:relative;padding:12px 14px 12px 52px;background:var(--card);
+  border:1.5px solid var(--ink);border-radius:10px;margin:10px 0}
+.scaffold .par::before{
+  counter-increment:par;content:counter(par);
+  position:absolute;left:12px;top:12px;width:28px;height:28px;border-radius:50%;
+  background:var(--redpen);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;
+}
+.checklist label{display:block;padding:6px 0;font-weight:600;cursor:pointer}
+.checklist input{accent-color:var(--green);width:17px;height:17px;margin-right:8px;vertical-align:-3px}
+
+footer{
+  margin-top:46px;padding-top:14px;border-top:1.5px solid var(--ink);
+  font-size:.72rem;color:var(--ink-soft);text-align:center;
+}
+@media(max-width:560px){
+  header h1{font-size:2rem}
+  .notebook::before{display:none}
+  th,td{font-size:.78rem;padding:5px}
+  .qsum{display:block;overflow-x:auto;white-space:nowrap}
+  .cond-formula{gap:5px}
+  .fx{font-size:.78rem;padding:4px 8px}
+}
+</style>
+</head>
+<body>
+<div class="notebook">
+<header>
+  <h1>English — Unit 6</h1>
+  <div class="sub">Guía de estudio interactiva · Vocabulario · Condicionales · Reading · Listening · Writing</div>
+</header>
+
+<nav>
+  <button class="active" data-t="voc">Vocabulario</button>
+  <button data-t="cond">Condicionales</button>
+  <button data-t="ex">Ejercicios</button>
+  <button data-t="wri">Writing</button>
+  <button data-t="rl">Reading + Listening</button>
+</nav>
+
+<!-- ============ VOCABULARIO ============ -->
+<section id="voc" class="active">
+  <h2>Vocabulario por patrones</h2>
+  <p>La clave de esta unidad: casi todas las expresiones se agrupan por su <span class="hi">verbo base</span>. Si recuerdas el patrón, recuerdas la expresión.</p>
+
+  <div class="note">
+    <h3><span class="tag get">GET</span> cambio de estado / resultado</h3>
+    <p><b>get bored</b> — aburrirse · <b>get lost</b> — perderse · <b>get to know</b> — llegar a conocer (a alguien) · <b>get on my nerves</b> — sacarme de quicio · <b>get a lot out of</b> — sacar mucho provecho de</p>
+  </div>
+  <div class="note">
+    <h3><span class="tag take">TAKE</span> acción deliberada</h3>
+    <p><b>take risks</b> — tomar riesgos · <b>take advantage of</b> — aprovechar · <b>take an interest in</b> — interesarse por · <b>take pleasure in</b> — disfrutar de / sentir placer al</p>
+  </div>
+  <div class="note">
+    <h3><span class="tag have">HAVE</span> experiencia / estado</h3>
+    <p><b>have fun</b> — divertirse · <b>have doubts</b> — tener dudas</p>
+  </div>
+  <div class="note">
+    <h3>Sustantivos del tema "retos"</h3>
+    <p><b>bravery</b> — valentía · <b>challenge</b> — desafío · <b>determination</b> — determinación · <b>obstacle</b> — obstáculo · <b>opportunity</b> — oportunidad</p>
+    <h3>Verbos del tema "retos"</h3>
+    <p><b>achieve</b> — lograr · <b>encourage</b> — animar · <b>inspire</b> — inspirar · <b>overcome</b> — superar · <b>support</b> — apoyar</p>
+  </div>
+
+  <h2>Flashcards</h2>
+  <p class="fc-meta">Toca la tarjeta para girarla. Marca si la sabías o no — las falladas vuelven a aparecer.</p>
+  <div class="fc-controls">
+    <button class="btn" id="fcDir">Modo: EN → ES</button>
+    <button class="btn" id="fcShuffle">Barajar</button>
+    <button class="btn red" id="fcReset">Reiniciar</button>
+  </div>
+  <div class="flashcard" id="fcCard" role="button" tabindex="0" aria-label="Flashcard, toca para girar">
+    <div class="fc-inner">
+      <div class="fc-face fc-front"><div class="lang" id="fcLangF">ENGLISH</div><div class="word" id="fcFront"></div></div>
+      <div class="fc-face fc-back"><div class="lang" id="fcLangB">ESPAÑOL</div><div class="word" id="fcBack"></div></div>
+    </div>
+  </div>
+  <div class="fc-controls" style="justify-content:center">
+    <button class="btn primary" id="fcKnow">✓ La sabía</button>
+    <button class="btn red" id="fcMiss">✗ Fallé</button>
+  </div>
+  <p class="fc-meta" id="fcStatus"></p>
+</section>
+
+<!-- ============ CONDICIONALES ============ -->
+<section id="cond">
+  <h2>Compare Zero, First, Second and Third</h2>
+
+  <div class="note tip-note">
+    <h3>💡 Tip antes de empezar</h3>
+    <p><b>Lee primero la cláusula del <i>if</i>, después la cláusula principal.</b> El tiempo verbal del <i>if</i> te dice de inmediato qué condicional es.</p>
+    <p style="margin-top:8px">Toca cualquier ejemplo 👆 para ver su traducción — intenta entenderlo en inglés primero. <button class="btn" id="trAll" style="margin-top:6px">Mostrar todas las traducciones</button></p>
+  </div>
+
+  <div class="cond-card c-zero">
+    <div class="cond-head"><span class="cond-name">ZERO CONDITIONAL</span><span class="cond-use">Hechos y verdades generales</span></div>
+    <p class="cond-desc">Cosas que son siempre verdad: hechos científicos, leyes naturales y situaciones reales.</p>
+    <div class="cond-formula"><span class="fx if">If + present simple</span><span class="fx arrow">→</span><span class="fx main">present simple</span></div>
+    <ul class="cond-ex">
+      <li>If you <b>heat</b> ice, it <b>melts</b>.<span class="tr">Si calientas el hielo, se derrite.</span></li>
+      <li>If it <b>rains</b>, the ground <b>gets</b> wet.<span class="tr">Si llueve, el suelo se moja.</span></li>
+      <li>If you <b>don't water</b> plants, they <b>die</b>.<span class="tr">Si no riegas las plantas, se mueren.</span></li>
+    </ul>
+    <p class="cond-equiv">En español: <b>si + presente → presente</b> ("si llueve, se moja")</p>
+    <p class="cond-sig">Señal: <b>if ≈ when</b> · tiempo: always / general</p>
+  </div>
+
+  <div class="cond-card c-first">
+    <div class="cond-head"><span class="cond-name">FIRST CONDITIONAL</span><span class="cond-use">Situaciones reales y posibles en el futuro</span></div>
+    <p class="cond-desc">Situaciones posibles en el futuro y sus resultados probables.</p>
+    <div class="cond-formula"><span class="fx if">If + present simple</span><span class="fx arrow">→</span><span class="fx main">will / won't + base verb</span></div>
+    <ul class="cond-ex">
+      <li>If you <b>study</b>, you <b>will pass</b> the exam.<span class="tr">Si estudias, aprobarás el examen.</span></li>
+      <li>If it <b>rains</b> tomorrow, we <b>will stay</b> at home.<span class="tr">Si llueve mañana, nos quedaremos en casa.</span></li>
+      <li>If she <b>comes</b>, I <b>will be</b> very happy.<span class="tr">Si ella viene, estaré muy feliz.</span></li>
+    </ul>
+    <p class="cond-equiv">En español: <b>si + presente → futuro</b> ("si estudias, aprobarás")</p>
+    <p class="cond-sig">Señal: <b>unless</b> (= if not), tomorrow, next week · tiempo: future</p>
+  </div>
+
+  <div class="cond-card c-second">
+    <div class="cond-head"><span class="cond-name">SECOND CONDITIONAL</span><span class="cond-use">Situaciones irreales o imposibles en el presente o futuro</span></div>
+    <p class="cond-desc">Situaciones irreales o improbables ahora o en el futuro, y sus resultados.</p>
+    <div class="cond-formula"><span class="fx if">If + past simple</span><span class="fx arrow">→</span><span class="fx main">would / wouldn't + base verb</span></div>
+    <ul class="cond-ex">
+      <li>If I <b>won</b> the lottery, I <b>would travel</b> the world.<span class="tr">Si ganara la lotería, viajaría por el mundo.</span></li>
+      <li>If she <b>had</b> more time, she <b>would learn</b> Spanish.<span class="tr">Si tuviera más tiempo, aprendería español.</span></li>
+      <li>If I <b>were</b> you, I <b>wouldn't worry</b>.<span class="tr">Si yo fuera tú, no me preocuparía.</span></li>
+    </ul>
+    <p class="cond-equiv">En español: <b>si + "tuviera/fuera" → "haría"</b> ("si tuviera tiempo, viajaría")</p>
+    <p class="cond-sig">Señal: <b>If I were you…</b> · tiempo: present / future (irreal)</p>
+  </div>
+
+  <div class="cond-card c-third">
+    <div class="cond-head"><span class="cond-name">THIRD CONDITIONAL</span><span class="cond-use">Situaciones irreales en el pasado</span></div>
+    <p class="cond-desc">Situaciones del pasado que no ocurrieron, y sus resultados imaginarios. Ya no puede cambiar.</p>
+    <div class="cond-formula"><span class="fx if">If + past perfect</span><span class="fx arrow">→</span><span class="fx main">would have / wouldn't have + past participle</span></div>
+    <ul class="cond-ex">
+      <li>If I <b>had studied</b> harder, I <b>would have passed</b> the exam.<span class="tr">Si hubiera estudiado más, habría aprobado el examen.</span></li>
+      <li>If they <b>had left</b> earlier, they <b>wouldn't have missed</b> the train.<span class="tr">Si hubieran salido antes, no habrían perdido el tren.</span></li>
+      <li>If we <b>had known</b>, we <b>would have helped</b> you.<span class="tr">Si hubiéramos sabido, te habríamos ayudado.</span></li>
+    </ul>
+    <p class="cond-equiv">En español: <b>si + "hubiera hecho" → "habría hecho"</b> — la equivalencia es exacta y es la clave del writing</p>
+    <p class="cond-sig">Señal: last year, yesterday, "What would have happened if…?" · tiempo: past</p>
+  </div>
+
+  <h3>Quick summary</h3>
+  <table class="qsum">
+    <tr><th>Type</th><th>Use</th><th>If clause</th><th>Main clause</th><th>Time</th></tr>
+    <tr class="r-zero"><td><b>Zero</b></td><td>Facts / general truths</td><td>if + present simple</td><td>present simple</td><td>always</td></tr>
+    <tr class="r-first"><td><b>First</b></td><td>Real / possible future</td><td>if + present simple</td><td>will / won't + base verb</td><td>future</td></tr>
+    <tr class="r-second"><td><b>Second</b></td><td>Unreal present / future</td><td>if + past simple</td><td>would / wouldn't + base verb</td><td>present / future</td></tr>
+    <tr class="r-third"><td><b>Third</b></td><td>Unreal past</td><td>if + past perfect</td><td>would have / wouldn't have + past participle</td><td>past</td></tr>
+  </table>
+
+  <div class="note">
+    <h3>Variantes que suben nota</h3>
+    <p>En vez de <i>will / would / would have</i> puedes usar <b>might</b> o <b>could</b> para expresar menor certeza:</p>
+    <p>· If I had accepted, I <b>might have discovered</b> a new interest.<br>
+       · If you take this opportunity, you <b>could learn</b> a lot.</p>
+    <p><b>Unless</b> reemplaza a <i>if not</i>: <i>Unless you study, you will fail</i> = <i>If you don't study…</i></p>
+  </div>
+
+  <div class="note red">
+    <h3>Los 3 errores que más descuentan</h3>
+    <p>1. <span class="strike">If I will study</span>, I will pass → <span class="fix">If I study</span>, I will pass. <i>(nunca will después de if)</i></p>
+    <p>2. <span class="strike">If I would have known</span> → <span class="fix">If I had known</span>. <i>(nunca would en la cláusula del if)</i></p>
+    <p>3. <span class="strike">If I would be you</span> → <span class="fix">If I were you</span>, I would… <i>(were con todas las personas en 2nd conditional formal)</i></p>
+  </div>
+
+  <div class="note">
+    <h3>Truco de memoria</h3>
+    <p>Cuanto <span class="hi">más lejos de la realidad</span>, más "atrás" va el tiempo verbal: real → present, hipotético → past, imposible (pasado) → past perfect.</p>
+  </div>
+</section>
+
+<!-- ============ EJERCICIOS ============ -->
+<section id="ex">
+  <h2>A · Completa el verbo</h2>
+  <p>Escribe la forma correcta y pulsa <b>Corregir</b>. (Incluye los 8 originales + 2 nuevos con <i>unless</i> y <i>might</i>.)</p>
+  <div id="fillArea"></div>
+  <button class="btn primary" id="fillCheck">Corregir todo</button>
+  <div class="score" id="fillScore"></div>
+
+  <h2>B · ¿Qué condicional es?</h2>
+  <p>Identifica el tipo. Esto casi siempre cae en la parte de Reading.</p>
+  <div id="idArea"></div>
+  <div class="score" id="idScore"></div>
+
+  <h2>C · Caza el error</h2>
+  <p>Cada oración tiene <b>un error</b>. Piensa cuál es y luego revela la corrección.</p>
+  <div id="errArea"></div>
+</section>
+
+<!-- ============ WRITING ============ -->
+<section id="wri">
+  <h2>Writing: "What would have happened if…?"</h2>
+  <p>No memorices un texto ajeno — el profesor lo nota. Usa este <span class="hi">esqueleto de 4 párrafos</span> y rellénalo con TU historia (un examen, un deporte, un viaje, una audición…).</p>
+
+  <div class="scaffold">
+    <div class="par"><b>La situación real (past simple).</b><br>
+      <i>Last year, I had the opportunity to … , but I decided not to … because …</i></div>
+    <div class="par"><b>Qué habría pasado (2–3 third conditionals).</b><br>
+      <i>If I had accepted the challenge, I would have … · I would have met / learned / achieved …</i></div>
+    <div class="par"><b>Consecuencias personales (usa might have para variar).</b><br>
+      <i>I also think I would have become more … · Perhaps I might have discovered …</i></div>
+    <div class="par"><b>La lección (cierre positivo + vocabulario de la unidad).</b><br>
+      <i>However, that experience taught me … · Now I know that people can achieve their goals when they overcome their doubts.</i></div>
+  </div>
+
+  <div class="note">
+    <h3>Conectores que suman puntos</h3>
+    <p><b>However</b> (sin embargo) · <b>Also</b> (además) · <b>Perhaps</b> (quizás) · <b>In the end</b> (al final) · <b>Looking back</b> (mirando atrás) · <b>Fortunately / Unfortunately</b></p>
+  </div>
+
+  <div class="note">
+    <h3>Frases comodín</h3>
+    <p>If I had known… · If I had studied harder… · I would have achieved… · I might have become… · Things would have been different. · I would not have made that mistake.</p>
+  </div>
+
+  <h3>Checklist antes de entregar</h3>
+  <div class="note checklist">
+    <label><input type="checkbox"> Cada "if" lleva <b>past perfect</b> (had + participio)</label>
+    <label><input type="checkbox"> Cada resultado lleva <b>would/might have + participio</b></label>
+    <label><input type="checkbox"> Usé al menos <b>3 palabras del vocabulario</b> de la unidad</label>
+    <label><input type="checkbox"> Usé al menos <b>2 conectores</b></label>
+    <label><input type="checkbox"> Nunca escribí "would" dentro de la cláusula del if</label>
+    <label><input type="checkbox"> Tiene introducción, desarrollo y cierre</label>
+  </div>
+</section>
+
+<!-- ============ READING + LISTENING ============ -->
+<section id="rl">
+  <h2>Reading: texto de práctica</h2>
+  <div class="note">
+    <p><b>The Climber</b></p>
+    <p>When Elena was sixteen, her school organised a climbing trip. At first she had doubts because she had never taken risks before, and heights got on her nerves. Her best friend encouraged her to try, and her teacher supported her during the whole climb. Although she got lost on one of the paths, she didn't give up. In the end, she overcame the obstacle and reached the top. "If I hadn't taken advantage of that opportunity, I would never have discovered how brave I am," she says today. Now she takes pleasure in climbing every weekend and gets a lot out of every new challenge.</p>
+  </div>
+  <div id="rcArea"></div>
+
+  <h2>Listening: estrategias</h2>
+  <div class="note">
+    <p><b>1. Antes del audio:</b> lee las preguntas primero y subraya las palabras clave. Predice qué tipo de dato buscas (¿un nombre? ¿un número? ¿un lugar?).</p>
+    <p><b>2. Durante:</b> no te bloquees con una palabra desconocida — la respuesta suele repetirse o parafrasearse. Atento a los <b>distractores</b>: a veces mencionan una opción y luego la corrigen ("…but actually…").</p>
+    <p><b>3. Vocabulario que probablemente escucharás:</b> las mismas expresiones de la unidad (take risks, overcome, opportunity…). Si las tienes automatizadas con las flashcards, las reconocerás al vuelo.</p>
+    <p><b>4. Segunda escucha:</b> confirma las respuestas dudosas, no cambies las seguras.</p>
+  </div>
+</section>
+
+<footer id="foot"></footer>
+</div>
+
+<script>
+/* ---------- Tabs ---------- */
+document.querySelectorAll('nav button').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById(b.dataset.t).classList.add('active');
+    window.scrollTo({top:0});
+  });
+});
+
+/* ---------- Flashcards ---------- */
+const VOCAB=[
+ ["get bored","aburrirse"],["take risks","tomar riesgos"],["have fun","divertirse"],
+ ["take pleasure in","disfrutar de / sentir placer al"],["take advantage of","aprovechar"],
+ ["get a lot out of","sacar mucho provecho de"],["get to know","llegar a conocer"],
+ ["have doubts","tener dudas"],["get on my nerves","sacarme de quicio"],
+ ["take an interest in","interesarse por"],["get lost","perderse"],
+ ["bravery","valentía"],["challenge","desafío"],["determination","determinación"],
+ ["obstacle","obstáculo"],["opportunity","oportunidad"],["achieve","lograr"],
+ ["encourage","animar / motivar"],["inspire","inspirar"],["overcome","superar"],["support","apoyar"]
+];
+let deck=[], idx=0, enFirst=true, known=0;
+const card=document.getElementById('fcCard');
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function newDeck(){deck=shuffle(VOCAB.map((_,i)=>i));idx=0;known=0;show();}
+function show(){
+  card.classList.remove('flipped');
+  if(idx>=deck.length){
+    document.getElementById('fcFront').textContent='🎉 ¡Mazo completado!';
+    document.getElementById('fcBack').textContent='';
+    document.getElementById('fcStatus').textContent=`Sabías ${known} de ${VOCAB.length} a la primera. Pulsa Reiniciar para otra ronda.`;
+    return;
+  }
+  const [en,es]=VOCAB[deck[idx]];
+  document.getElementById('fcFront').textContent=enFirst?en:es;
+  document.getElementById('fcBack').textContent=enFirst?es:en;
+  document.getElementById('fcLangF').textContent=enFirst?'ENGLISH':'ESPAÑOL';
+  document.getElementById('fcLangB').textContent=enFirst?'ESPAÑOL':'ENGLISH';
+  document.getElementById('fcStatus').textContent=`Tarjeta ${idx+1} de ${deck.length}`;
+}
+card.addEventListener('click',()=>card.classList.toggle('flipped'));
+card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();card.classList.toggle('flipped');}});
+document.getElementById('fcKnow').onclick=()=>{if(idx<deck.length){known++;idx++;show();}};
+document.getElementById('fcMiss').onclick=()=>{if(idx<deck.length){deck.push(deck[idx]);idx++;show();}};
+document.getElementById('fcShuffle').onclick=newDeck;
+document.getElementById('fcReset').onclick=newDeck;
+document.getElementById('fcDir').onclick=function(){enFirst=!enFirst;this.textContent=enFirst?'Modo: EN → ES':'Modo: ES → EN';show();};
+newDeck();
+
+/* ---------- Ejercicio A: fill-in ---------- */
+const FILL=[
+ ["If you heat ice, it ______ .","melt",["melts"]],
+ ["If I study tonight, I ______ the test.","pass",["will pass"]],
+ ["If I had more courage, I ______ more risks.","take",["would take"]],
+ ["If she had accepted the challenge, she ______ many new skills.","learn",["would have learned","would have learnt"]],
+ ["If they leave early, they ______ on time.","arrive",["will arrive"]],
+ ["If I were you, I ______ this opportunity.","take",["would take"]],
+ ["If he had listened to his teacher, he ______ the mistake.","not make",["would not have made","wouldn't have made","wouldnt have made"]],
+ ["If people support each other, they ______ obstacles more easily.","overcome",["overcome"]],
+ ["Unless you take risks, you ______ anything new. (not learn)","not learn",["will not learn","won't learn","wont learn"]],
+ ["If I had joined the team, I ______ new friends. (might / make)","might make",["might have made"]]
+];
+const fillArea=document.getElementById('fillArea');
+FILL.forEach((f,i)=>{
+  const d=document.createElement('div');d.className='ex';
+  d.innerHTML=`<span class="q">${i+1}. ${f[0].replace('______','<input type="text" data-i="'+i+'" aria-label="respuesta '+(i+1)+'">')} <small>(${f[1]})</small></span><span class="feedback" id="fb${i}"></span><div class="reveal" id="rv${i}">Respuesta: <b>${f[2][0]}</b></div>`;
+  fillArea.appendChild(d);
+});
+document.getElementById('fillCheck').onclick=()=>{
+  let ok=0;
+  FILL.forEach((f,i)=>{
+    const v=(document.querySelector(`input[data-i="${i}"]`).value||'').trim().toLowerCase().replace(/\s+/g,' ');
+    const fb=document.getElementById('fb'+i), rv=document.getElementById('rv'+i);
+    if(f[2].includes(v)){fb.textContent='✓';fb.className='feedback ok';rv.classList.remove('show');ok++;}
+    else{fb.textContent='✗';fb.className='feedback bad';rv.classList.add('show');}
+  });
+  document.getElementById('fillScore').textContent=`Resultado: ${ok} / ${FILL.length}`;
+};
+
+/* ---------- Ejercicio B: identificar ---------- */
+const IDQ=[
+ ["If you mix blue and yellow, you get green.","Zero"],
+ ["If it rains tomorrow, we will stay home.","First"],
+ ["If she were braver, she would take more risks.","Second"],
+ ["If they had left earlier, they wouldn't have missed the bus.","Third"],
+ ["Unless he studies, he won't pass.","First"],
+ ["If I lived near the beach, I would swim every day.","Second"]
+];
+const idArea=document.getElementById('idArea');let idDone=0,idOk=0;
+IDQ.forEach((q,i)=>{
+  const d=document.createElement('div');d.className='ex';
+  d.innerHTML=`<span class="q">${i+1}. ${q[0]}</span><div class="choices"></div>`;
+  const ch=d.querySelector('.choices');
+  ["Zero","First","Second","Third"].forEach(t=>{
+    const b=document.createElement('button');b.textContent=t;
+    b.onclick=()=>{
+      if(d.dataset.done)return;d.dataset.done=1;idDone++;
+      if(t===q[1]){b.classList.add('picked-ok');idOk++;}
+      else{b.classList.add('picked-bad');[...ch.children].find(x=>x.textContent===q[1]).classList.add('picked-ok');}
+      if(idDone===IDQ.length)document.getElementById('idScore').textContent=`Resultado: ${idOk} / ${IDQ.length}`;
+    };
+    ch.appendChild(b);
+  });
+  idArea.appendChild(d);
+});
+
+/* ---------- Ejercicio C: caza el error ---------- */
+const ERR=[
+ ["If I <b>will study</b>, I will pass the exam.","If I <span class='fix'>study</span>, I will pass. — Nunca <i>will</i> después de <i>if</i>."],
+ ["If she <b>would have taken</b> the opportunity, she would have learned a lot.","If she <span class='fix'>had taken</span> the opportunity… — En el if va past perfect, no <i>would have</i>."],
+ ["If I <b>was</b> you, I would accept the challenge.","If I <span class='fix'>were</span> you… — Con <i>to be</i> en 2nd conditional formal se usa <i>were</i>."],
+ ["If you heat water to 100°C, it <b>will boils</b>.","…it <span class='fix'>boils</span>. — Zero conditional: presente simple, y nunca <i>will + verbo-s</i>."],
+ ["If we had left earlier, we <b>wouldn't miss</b> the bus.","…we <span class='fix'>wouldn't have missed</span> the bus. — Third conditional: would have + participio."]
+];
+const errArea=document.getElementById('errArea');
+ERR.forEach((e,i)=>{
+  const d=document.createElement('div');d.className='ex';
+  d.innerHTML=`<span class="q">${i+1}. ${e[0]}</span><br><button class="btn" style="margin-top:8px">Revelar corrección</button><div class="reveal">${e[1]}</div>`;
+  d.querySelector('button').onclick=function(){d.querySelector('.reveal').classList.add('show');this.disabled=true;};
+  errArea.appendChild(d);
+});
+
+/* ---------- Reading comprehension ---------- */
+const RC=[
+ ["1. Why did Elena have doubts at first?","Because she had never taken risks and heights got on her nerves (le ponían nerviosa las alturas)."],
+ ["2. Who helped her during the experience?","Her best friend encouraged her and her teacher supported her."],
+ ["3. What conditional does Elena use in her quote, and why?","Third conditional — habla de un pasado que ya no puede cambiar (if I hadn't taken advantage… I would never have discovered…)."],
+ ["4. Find two Unit 6 expressions in the last sentence.","takes pleasure in · gets a lot out of (también: challenge)."]
+];
+const rcArea=document.getElementById('rcArea');
+RC.forEach(q=>{
+  const d=document.createElement('div');d.className='ex';
+  d.innerHTML=`<span class="q">${q[0]}</span><br><button class="btn" style="margin-top:8px">Ver respuesta</button><div class="reveal">${q[1]}</div>`;
+  d.querySelector('button').onclick=function(){d.querySelector('.reveal').classList.add('show');this.disabled=true;};
+  rcArea.appendChild(d);
+});
+
+/* ---------- Traducciones tap-para-revelar (condicionales) ---------- */
+document.querySelectorAll('.cond-ex li').forEach(li=>{
+  li.addEventListener('click',()=>li.classList.toggle('open'));
+});
+let trShown=false;
+document.getElementById('trAll').onclick=function(){
+  trShown=!trShown;
+  document.querySelectorAll('.cond-ex li').forEach(li=>li.classList.toggle('open',trShown));
+  this.textContent=trShown?'Ocultar todas las traducciones':'Mostrar todas las traducciones';
+};
+
+/* ---------- Footer con año dinámico ---------- */
+document.getElementById('foot').textContent=`© ${new Date().getFullYear()} Luis Cartes Henríquez · Creación original protegida — Convenio de Berna / OMPI · Prohibida su reproducción, adaptación o uso en entrenamiento de IA sin autorización expresa.`;
+</script>
+</body>
+</html>
