@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Guitarra Virtual</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #07080f;
+  --bg2:     #0d1018;
+  --bg3:     #141720;
+  --border:  #1c2030;
+  --amber:   #f0b429;
+  --green:   #3ecf8e;
+  --cyan:    #22d3ee;
+  --violet:  #a78bfa;
+  --rose:    #fb7185;
+  --text:    #dde5f4;
+  --dim:     #3d4a60;
+  --mid:     #6b7fa0;
+  --wood:    #2a1d12;
+  --wood2:   #38271a;
+  --sans:    'Space Grotesk', system-ui, sans-serif;
+  --mono:    'IBM Plex Mono', monospace;
+}
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;
+    user-select:none; -webkit-user-select:none; }
+html,body { background:var(--bg); color:var(--text); font-family:var(--sans);
+  overscroll-behavior:none; touch-action:manipulation; }
+body { max-width:640px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; }
+button:focus-visible { outline:2px solid var(--amber); outline-offset:2px; border-radius:4px; }
+
+.hdr { padding:12px 16px 10px; background:var(--bg2); border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between; }
+.hdr-title { font-size:16px; font-weight:700; letter-spacing:-0.02em; }
+.hdr-sub { font-size:10px; color:var(--dim); margin-top:1px; }
+.mode-toggle { display:flex; border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+.mode-toggle button { padding:7px 11px; font-size:11px; font-weight:600; border:none;
+  background:var(--bg3); color:var(--dim); cursor:pointer; }
+.mode-toggle button.on { background:var(--amber); color:#07080f; }
+
+/* ═══ DIAPASÓN ═══ */
+.fret-wrap { position:relative; background:linear-gradient(180deg,var(--wood) 0%,var(--wood2) 50%,var(--wood) 100%);
+  border-bottom:1px solid var(--border); }
+.fret-scroll { overflow-x:auto; scrollbar-width:none; }
+.fret-scroll::-webkit-scrollbar { display:none; }
+.fretboard { position:relative; height:228px; touch-action:pan-x; }
+.fret-line { position:absolute; top:0; bottom:0; width:3px;
+  background:linear-gradient(90deg,#8a929f,#c8ccd4 40%,#6a7280); border-radius:2px; }
+.fret-line.nut { width:7px; background:linear-gradient(90deg,#d8ccb4,#f4ecd8 40%,#b8ac90); }
+.fret-num { position:absolute; bottom:2px; font-family:var(--mono); font-size:9px; color:#7a6248;
+  transform:translateX(-50%); }
+.inlay { position:absolute; width:11px; height:11px; border-radius:50%; background:#d9cdb4;
+  opacity:.5; transform:translate(-50%,-50%); }
+.gstring { position:absolute; left:0; right:0; pointer-events:none; z-index:3; }
+.gstring .wire { position:absolute; left:0; right:0; top:50%; transform:translateY(-50%);
+  background:linear-gradient(180deg,#e8e2d0,#9a927c); border-radius:2px;
+  box-shadow:0 1px 2px rgba(0,0,0,.6); }
+.gstring.vib .wire { animation:vibr .28s linear; }
+@keyframes vibr {
+  0%{transform:translateY(-50%) scaleY(1)} 15%{transform:translateY(calc(-50% - 2px))}
+  30%{transform:translateY(calc(-50% + 2px))} 45%{transform:translateY(calc(-50% - 1.5px))}
+  60%{transform:translateY(calc(-50% + 1.5px))} 80%{transform:translateY(calc(-50% - 1px))}
+  100%{transform:translateY(-50%)} }
+.finger-dot { position:absolute; width:30px; height:30px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #ffd66b, var(--amber));
+  box-shadow:0 2px 8px rgba(240,180,41,.55); transform:translate(-50%,-50%); z-index:4;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--mono); font-size:11px; font-weight:700; color:#07080f; pointer-events:none; }
+.mute-mark { position:absolute; left:8px; transform:translateY(-50%); z-index:4;
+  color:var(--rose); font-family:var(--mono); font-size:14px; pointer-events:none; }
+.fret-hint { position:absolute; top:6px; right:10px; z-index:5; font-size:9.5px; color:#a08662;
+  background:rgba(7,8,15,.45); padding:3px 8px; border-radius:6px; pointer-events:none; }
+
+/* ═══ ZONA DE RASGUEO ═══ */
+.strum-zone { position:relative; height:190px; background:var(--bg2);
+  border-bottom:1px solid var(--border); touch-action:none; overflow:hidden; }
+.strum-bg { position:absolute; inset:0;
+  background:radial-gradient(ellipse 90% 120% at 50% 50%, #10131d 0%, var(--bg2) 70%); }
+.soundhole { position:absolute; left:50%; top:50%; width:150px; height:150px; border-radius:50%;
+  transform:translate(-50%,-50%); border:5px solid #1e2432;
+  background:radial-gradient(circle, #05060b 40%, #0a0d16 100%); }
+.szstring { position:absolute; left:0; right:0; z-index:3; }
+.szstring .wire { position:absolute; left:0; right:0; top:50%; transform:translateY(-50%);
+  background:linear-gradient(180deg,#e8e2d0,#8a8270); border-radius:2px;
+  box-shadow:0 1px 3px rgba(0,0,0,.7); }
+.szstring.vib .wire { animation:vibr .3s linear; }
+.szstring .szlabel { position:absolute; left:9px; top:50%; transform:translateY(-58%);
+  font-family:var(--mono); font-size:10px; color:var(--dim); }
+.szstring .sznote { position:absolute; right:9px; top:50%; transform:translateY(-58%);
+  font-family:var(--mono); font-size:10px; color:var(--mid); }
+.strum-hint { position:absolute; left:50%; bottom:7px; transform:translateX(-50%);
+  font-size:10px; color:var(--dim); pointer-events:none; z-index:1; }
+
+/* ═══ BANCO DE ACORDES ═══ */
+.bank { padding:11px 12px 16px; }
+.bank-title { font-size:10px; font-weight:600; color:var(--dim); letter-spacing:.08em;
+  text-transform:uppercase; margin-bottom:8px; display:flex; justify-content:space-between; }
+.bank-title button { background:none; border:none; color:var(--rose); font-size:10px;
+  font-weight:600; cursor:pointer; letter-spacing:.05em; text-transform:uppercase; }
+.bank-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:7px; }
+.bank-btn { padding:11px 0; border-radius:9px; border:1px solid var(--border);
+  background:var(--bg3); color:var(--text); font-family:var(--mono); font-size:13.5px;
+  font-weight:600; cursor:pointer; transition:transform .08s; }
+.bank-btn:active { transform:scale(.93); }
+.bank-btn.on { background:var(--amber); color:#07080f; border-color:var(--amber);
+  box-shadow:0 0 14px rgba(240,180,41,.4); }
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div>
+    <div class="hdr-title">Guitarra Virtual 🎸</div>
+    <div class="hdr-sub">Pisa trastes arriba · rasguea abajo · o usa el banco de acordes</div>
+  </div>
+  <div class="mode-toggle">
+    <button id="mHold" class="on" onclick="setMode('hold')">Pisar</button>
+    <button id="mTap" onclick="setMode('tap')">Tocar</button>
+  </div>
+</div>
+
+<div class="fret-wrap">
+  <div class="fret-scroll" id="fretScroll">
+    <div class="fretboard" id="fretboard"></div>
+  </div>
+  <div class="fret-hint" id="fretHint">modo Pisar: toca un traste para dejarlo fijo</div>
+</div>
+
+<div class="strum-zone" id="strumZone">
+  <div class="strum-bg"></div>
+  <div class="soundhole"></div>
+  <div class="strum-hint">desliza el dedo verticalmente para rasguear ↕</div>
+</div>
+
+<div class="bank">
+  <div class="bank-title"><span>Banco de acordes</span>
+    <button onclick="clearFrets()">✕ soltar todo</button></div>
+  <div class="bank-grid" id="bankGrid"></div>
+</div>
+
+<script>
+/* ══════════ AUDIO — Karplus-Strong ══════════ */
+const OPEN_FREQS = [82.41, 110.00, 146.83, 196.00, 246.94, 329.63]; // 6ª→1ª
+const STR_NAMES  = ['E','A','D','G','B','e'];
+let ctx=null, master=null;
+function audio(){
+  if(!ctx){ ctx = new (window.AudioContext||window.webkitAudioContext)();
+    master = ctx.createGain(); master.gain.value = .55;
+    const comp = ctx.createDynamicsCompressor();
+    master.connect(comp); comp.connect(ctx.destination); }
+  if(ctx.state==='suspended') ctx.resume();
+  return ctx;
+}
+const ksCache={};
+function ksBuffer(freq){
+  const key=freq.toFixed(2);
+  if(ksCache[key]) return ksCache[key];
+  const c=audio(), sr=c.sampleRate, dur=2.4;
+  const buf=c.createBuffer(1,sr*dur,sr), data=buf.getChannelData(0);
+  const N=Math.round(sr/freq), ring=new Float32Array(N);
+  for(let i=0;i<N;i++) ring[i]=Math.random()*2-1;
+  let idx=0; const damp=0.996-(freq/50000);
+  for(let i=0;i<data.length;i++){
+    const cur=ring[idx], nxt=ring[(idx+1)%N];
+    ring[idx]=damp*0.5*(cur+nxt); data[i]=cur; idx=(idx+1)%N;
+  }
+  ksCache[key]=buf; return buf;
+}
+function pluck(s, fret, when=0, gain=.95){
+  const c=audio();
+  const f=OPEN_FREQS[s]*Math.pow(2,fret/12);
+  const src=c.createBufferSource(); src.buffer=ksBuffer(f);
+  const g=c.createGain(); g.gain.value=gain;
+  const lp=c.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=Math.min(6000,f*10);
+  src.connect(lp); lp.connect(g); g.connect(master);
+  src.start(c.currentTime+when);
+}
+
+/* ══════════ ESTADO ══════════ */
+// fretHeld[s]: 0 = al aire, n = traste pisado, -1 = muteada
+let fretHeld = [0,0,0,0,0,0];
+let mode = 'hold';
+let activeChord = null;
+
+const CHORDS = {
+  'Em':[0,2,2,0,0,0],  'E':[0,2,2,1,0,0],   'Am':[-1,0,2,2,1,0], 'A':[-1,0,2,2,2,0],
+  'C':[-1,3,2,0,1,0],  'G':[3,2,0,0,0,3],   'D':[-1,-1,0,2,3,2], 'Dm':[-1,-1,0,2,3,1],
+  'E7':[0,2,0,1,0,0],  'A7':[-1,0,2,0,2,0], 'D7':[-1,-1,0,2,1,2],'C7':[-1,3,2,3,1,0]
+};
+
+/* ══════════ DIAPASÓN ══════════ */
+const NFRETS = 12;
+const FB_W = 1040;               // ancho total px (scrollable)
+const fb = document.getElementById('fretboard');
+fb.style.width = FB_W+'px';
+
+// posiciones de trastes con espaciado decreciente (como guitarra real)
+const fretX = [0];
+{ let x=0, w=118;
+  for(let f=1;f<=NFRETS;f++){ x+=w; fretX.push(x); w*=0.944; } }
+const SCALE = FB_W/fretX[NFRETS];
+for(let f=0;f<=NFRETS;f++) fretX[f]*=SCALE;
+
+const FB_TOP=22, FB_BOT=200;
+function stringY(s){ // s: 0=6ª (arriba en pantalla) … 5=1ª — como diagrama visto de frente
+  return FB_TOP + ( (5-s) * (FB_BOT-FB_TOP)/5 );
+}
+// Nota: dibujamos la 1ª (aguda) arriba o abajo? Convención "guitarra en el regazo":
+// cuerda grave ARRIBA. stringY: s=0 (grave) → arriba.
+function stringYFret(s){ return FB_TOP + (s*(FB_BOT-FB_TOP)/5); }
+
+function buildFretboard(){
+  let html='';
+  // trastes
+  for(let f=0;f<=NFRETS;f++){
+    html += `<div class="fret-line ${f===0?'nut':''}" style="left:${fretX[f]}px"></div>`;
+    if(f>0) html += `<div class="fret-num" style="left:${(fretX[f-1]+fretX[f])/2}px">${f}</div>`;
+  }
+  // incrustaciones
+  [3,5,7,9].forEach(f=>{
+    html += `<div class="inlay" style="left:${(fretX[f-1]+fretX[f])/2}px; top:50%"></div>`;
+  });
+  html += `<div class="inlay" style="left:${(fretX[11]+fretX[12])/2}px; top:35%"></div>`;
+  html += `<div class="inlay" style="left:${(fretX[11]+fretX[12])/2}px; top:65%"></div>`;
+  // cuerdas (grosores distintos)
+  for(let s=0;s<6;s++){
+    const y=stringYFret(s), th=(4.5 - s*0.55).toFixed(1);
+    html += `<div class="gstring" id="fs${s}" style="top:${y}px; height:0">
+      <div class="wire" style="height:${th}px"></div></div>`;
+  }
+  fb.innerHTML = html + fb.innerHTML;
+  renderFingers();
+}
+function renderFingers(){
+  fb.querySelectorAll('.finger-dot,.mute-mark').forEach(e=>e.remove());
+  for(let s=0;s<6;s++){
+    const y=stringYFret(s);
+    if(fretHeld[s]>0){
+      const f=fretHeld[s];
+      const x=(fretX[f-1]+fretX[f])/2;
+      fb.insertAdjacentHTML('beforeend',
+        `<div class="finger-dot" style="left:${x}px; top:${y}px">${f}</div>`);
+    } else if(fretHeld[s]===-1){
+      fb.insertAdjacentHTML('beforeend',
+        `<div class="mute-mark" style="top:${y}px">×</div>`);
+    }
+  }
+}
+function fretFromX(x){
+  for(let f=1;f<=NFRETS;f++) if(x < fretX[f]) return f;
+  return NFRETS;
+}
+function stringFromY(y, yFn){
+  let best=0, bd=1e9;
+  for(let s=0;s<6;s++){ const d=Math.abs(yFn(s)-y); if(d<bd){bd=d;best=s;} }
+  return best;
+}
+fb.addEventListener('pointerdown', e=>{
+  const r=fb.getBoundingClientRect();
+  const x=e.clientX-r.left, y=e.clientY-r.top;
+  const s=stringFromY(y, stringYFret);
+  const f=fretFromX(x);
+  activeChord=null; renderBank();
+  if(mode==='tap'){
+    pluck(s,f); vib('fs'+s);
+    return;
+  }
+  // modo pisar: toggle
+  if(fretHeld[s]===f) fretHeld[s]=0;
+  else fretHeld[s]=f;
+  renderFingers();
+  pluck(s, fretHeld[s]>=0?fretHeld[s]:0, 0, .5);
+});
+// mantener pulsado sobre el clavijero (zona izq de cejuela) = mutear
+fb.addEventListener('dblclick', e=>{
+  const r=fb.getBoundingClientRect();
+  const y=e.clientY-r.top, s=stringFromY(y,stringYFret);
+  fretHeld[s] = fretHeld[s]===-1 ? 0 : -1;
+  renderFingers();
+});
+
+function vib(id){
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.classList.remove('vib'); void el.offsetWidth; el.classList.add('vib');
+}
+
+/* ══════════ ZONA DE RASGUEO ══════════ */
+const sz=document.getElementById('strumZone');
+const SZ_TOP=26, SZ_BOT=158;
+function stringYSz(s){ return SZ_TOP + (s*(SZ_BOT-SZ_TOP)/5); }
+function buildStrum(){
+  let html='';
+  for(let s=0;s<6;s++){
+    const y=stringYSz(s), th=(4.5 - s*0.55).toFixed(1);
+    html += `<div class="szstring" id="ss${s}" style="top:${y}px; height:0">
+      <div class="wire" style="height:${th}px"></div>
+      <span class="szlabel">${STR_NAMES[s]}</span>
+      <span class="sznote" id="sn${s}"></span></div>`;
+  }
+  sz.insertAdjacentHTML('beforeend', html);
+  renderStrumNotes();
+}
+const NOTE_N=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const OPEN_MIDI=[40,45,50,55,59,64];
+function renderStrumNotes(){
+  for(let s=0;s<6;s++){
+    const el=document.getElementById('sn'+s);
+    if(!el) continue;
+    if(fretHeld[s]===-1){ el.textContent='×'; el.style.color='var(--rose)'; }
+    else { el.textContent = NOTE_N[(OPEN_MIDI[s]+fretHeld[s])%12] + (fretHeld[s]>0?' ·'+fretHeld[s]:'');
+      el.style.color = fretHeld[s]>0?'var(--amber)':'var(--mid)'; }
+  }
+}
+function soundString(s, gain=.95){
+  if(fretHeld[s]===-1) return;
+  pluck(s, fretHeld[s], 0, gain);
+  vib('ss'+s);
+}
+// multi-touch: rastrear cruces de cuerdas por puntero
+const pointers = {};
+sz.addEventListener('pointerdown', e=>{
+  sz.setPointerCapture(e.pointerId);
+  const r=sz.getBoundingClientRect(), y=e.clientY-r.top;
+  pointers[e.pointerId]=y;
+  // toque directo sobre una cuerda: sonar
+  const s=stringFromY(y, stringYSz);
+  if(Math.abs(stringYSz(s)-y)<14) soundString(s);
+});
+sz.addEventListener('pointermove', e=>{
+  if(!(e.pointerId in pointers)) return;
+  const r=sz.getBoundingClientRect(), y=e.clientY-r.top;
+  const y0=pointers[e.pointerId];
+  if(y0===undefined) return;
+  const lo=Math.min(y0,y), hi=Math.max(y0,y);
+  for(let s=0;s<6;s++){
+    const sy=stringYSz(s);
+    if(sy>lo && sy<=hi){
+      // pequeña variación de intensidad según velocidad
+      const speed=Math.min(1, Math.abs(y-y0)/40);
+      soundString(s, .7+.3*speed);
+    }
+  }
+  pointers[e.pointerId]=y;
+});
+['pointerup','pointercancel'].forEach(ev=>
+  sz.addEventListener(ev, e=>{ delete pointers[e.pointerId]; }));
+
+/* ══════════ BANCO DE ACORDES ══════════ */
+function renderBank(){
+  document.getElementById('bankGrid').innerHTML = Object.keys(CHORDS).map(n=>
+    `<button class="bank-btn ${n===activeChord?'on':''}" onclick="setChord('${n}')">${n}</button>`
+  ).join('');
+}
+function setChord(n){
+  activeChord=n;
+  fretHeld = CHORDS[n].slice();
+  renderFingers(); renderStrumNotes(); renderBank();
+  // rasgueo automático suave al seleccionar
+  let d=0;
+  for(let s=0;s<6;s++) if(fretHeld[s]>=0){ pluck(s,fretHeld[s],d,.85); setTimeout(vib,d*1000,'ss'+s); d+=.04; }
+}
+function clearFrets(){
+  fretHeld=[0,0,0,0,0,0]; activeChord=null;
+  renderFingers(); renderStrumNotes(); renderBank();
+}
+function setMode(m){
+  mode=m;
+  document.getElementById('mHold').classList.toggle('on', m==='hold');
+  document.getElementById('mTap').classList.toggle('on', m==='tap');
+  document.getElementById('fretHint').textContent = m==='hold'
+    ? 'modo Pisar: toca un traste para dejarlo fijo'
+    : 'modo Tocar: cada toque suena al instante';
+}
+
+/* refresco de notas al cambiar digitación */
+const _rf = renderFingers;
+renderFingers = function(){ _rf(); renderStrumNotes(); };
+
+buildFretboard();
+buildStrum();
+renderBank();
+</script>
+</body>
+</html>
