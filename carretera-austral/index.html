@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Guía Carretera Austral en Land Rover Discovery 4: mapa con GPS, barcazas, cortes, combustible, Starlink y checklists.">
+<title>Carretera Austral en Land Rover</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Public+Sans:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<style id="app-css">
+/* Layout: guía de ruta tipo "hoja de camino" — portada con cifras, índice fijo, secciones apiladas; mapa de tramos vertical */
+:root{
+  --bg:#eef1ee; --paper:#fbfcfa; --ink:#18221f; --muted:#5b6862; --line:#d3dad5;
+  --lagoon:#13707c; --lagoon-soft:#d7ecec; --gravel:#a8761f; --gravel-soft:#f3e7cf;
+  --warn:#b4471f; --warn-soft:#f8e2d8; --ok:#2f7a45; --ok-soft:#dcefe1;
+  --f-display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1517; --paper:#162024; --ink:#e4ebe7; --muted:#97a69f; --line:#2b383b;
+  --lagoon:#4cc0c9; --lagoon-soft:#16363a; --gravel:#d9a54a; --gravel-soft:#3a2f1b;
+  --warn:#ef8a63; --warn-soft:#3d231a; --ok:#6cc487; --ok-soft:#1b3423; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1517; --paper:#162024; --ink:#e4ebe7; --muted:#97a69f; --line:#2b383b;
+  --lagoon:#4cc0c9; --lagoon-soft:#16363a; --gravel:#d9a54a; --gravel-soft:#3a2f1b;
+  --warn:#ef8a63; --warn-soft:#3d231a; --ok:#6cc487; --ok-soft:#1b3423; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55}
+*{box-sizing:border-box}
+a{color:var(--lagoon)}
+.wrap{max-width:860px;margin:0 auto;padding-inline:16px;padding-block:20px 120px}
+header.hero{display:grid;gap:14px;padding-block:8px 18px;border-bottom:2px solid var(--ink)}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(44px,11vw,84px);line-height:.9;margin:0;letter-spacing:-.01em;text-transform:uppercase;text-wrap:balance}
+.sub{color:var(--muted);margin:0;max-width:62ch}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:6px}
+.stat{background:var(--paper);padding:12px;min-width:0}
+.stat b{font-family:var(--f-display);font-size:34px;line-height:1;font-weight:800;display:block;font-variant-numeric:tabular-nums}
+.stat b small{font-size:16px;margin-left:3px;color:var(--muted);font-weight:600}
+.stat span{font-size:13px;color:var(--muted);display:block;margin-top:4px}
+@media (max-width:560px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.verif{font-family:var(--f-mono);font-size:12px;padding:3px 8px;border-radius:3px;background:var(--ok-soft);color:var(--ok)}
+.verif.old{background:var(--warn-soft);color:var(--warn)}
+nav.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);margin-inline:-16px;padding:8px 16px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+nav.toc a{flex:none;font-family:var(--f-mono);font-size:12px;text-decoration:none;color:var(--ink);border:1px solid var(--line);background:var(--paper);padding:5px 9px;border-radius:999px;white-space:nowrap}
+nav.toc a:hover,nav.toc a:focus-visible{border-color:var(--lagoon);color:var(--lagoon);outline:none}
+section.sec{padding-block:28px 6px;border-bottom:1px solid var(--line);scroll-margin-top:56px;display:grid;gap:14px}
+.sec-head{display:flex;gap:10px;align-items:baseline}
+.sec-num{font-family:var(--f-mono);font-size:13px;color:var(--lagoon);flex:none}
+h2{font-family:var(--f-display);font-weight:800;font-size:clamp(28px,6vw,38px);line-height:1;margin:0;text-transform:uppercase;text-wrap:balance;flex:1;min-width:0}
+h3{font-family:var(--f-body);font-size:17px;font-weight:700;margin:8px 0 0}
+p{margin:0;max-width:68ch}
+p.src{font-size:13px;color:var(--muted);font-style:italic}
+ul.lst{margin:0;padding-left:20px;display:grid;gap:6px;max-width:68ch}
+.tbl{overflow-x:auto;border:1px solid var(--line);background:var(--paper)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;text-align:left;color:var(--muted);font-weight:600;background:var(--bg)}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:600}
+.num{font-variant-numeric:tabular-nums}
+.note{border:1px solid var(--line);border-left:4px solid var(--lagoon);background:var(--paper);padding:12px 14px;display:grid;gap:4px}
+.note.warn{border-left-color:var(--warn);background:var(--warn-soft)}
+.note strong.t{font-size:15px}
+.badge{font-family:var(--f-mono);font-size:11px;padding:2px 7px;border-radius:3px;background:var(--lagoon-soft);color:var(--lagoon);justify-self:start}
+.badge.exp{background:var(--warn);color:var(--paper)}
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:2px;max-width:68ch}
+.checks li{display:flex;gap:10px;align-items:flex-start;padding:6px 4px;border-radius:4px}
+.checks li:hover{background:var(--paper)}
+.box{flex:none;width:20px;height:20px;margin-top:2px;border:2px solid var(--muted);border-radius:3px;background:var(--paper);cursor:pointer;display:grid;place-items:center;padding:0;color:var(--paper)}
+.box[aria-checked="true"]{background:var(--ok);border-color:var(--ok)}
+.box:focus-visible{outline:2px solid var(--lagoon);outline-offset:2px}
+.checks li.done>.txt{color:var(--muted);text-decoration:line-through}
+.prog{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+/* mapa de tramos */
+.route{list-style:none;margin:0;padding:4px 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px}
+@media (max-width:560px){.route{grid-template-columns:1fr}}
+.route li{position:relative;padding:0 0 14px 26px;min-width:0}
+.route li::before{content:"";position:absolute;left:5px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--paper);border:3px solid var(--ink);z-index:1}
+.route li::after{content:"";position:absolute;left:10px;top:18px;bottom:-4px;border-left:4px solid var(--ink)}
+.route li.k-gravel::after{border-left-style:dashed;border-left-color:var(--gravel)}
+.route li.k-ferry::after{border-left:4px dotted var(--lagoon)}
+.route li.k-end::after{display:none}
+.route .stop{font-weight:700;font-size:15px}
+.route .seg{font-size:12px;color:var(--muted);font-family:var(--f-mono)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--muted);font-family:var(--f-mono)}
+.legend i{display:inline-block;width:22px;vertical-align:middle;margin-right:5px;border-top:4px solid var(--ink)}
+.legend i.g{border-top:4px dashed var(--gravel)} .legend i.f{border-top:4px dotted var(--lagoon)}
+footer.foot{padding-block:24px;font-size:13px;color:var(--muted);display:grid;gap:4px}
+/* edición */
+.tools{display:flex;gap:6px;flex-wrap:wrap}
+button.btn{font:600 13px var(--f-body);border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:6px 11px;border-radius:4px;cursor:pointer}
+button.btn:hover{border-color:var(--ink)}
+button.btn:focus-visible{outline:2px solid var(--lagoon);outline-offset:1px}
+button.btn.pri{background:var(--lagoon);border-color:var(--lagoon);color:var(--paper)}
+button.btn.danger{color:var(--warn)}
+button.btn.sm{padding:2px 8px;font-size:12px}
+.edit [data-k]{outline:1px dashed var(--line);outline-offset:2px;border-radius:2px;min-width:2ch;display:inline-block}
+.edit [data-k]:focus{outline:2px solid var(--lagoon);background:var(--paper)}
+.edit p[data-k],.edit h3[data-k],.edit .note [data-k]{display:block}
+.blk{position:relative;display:grid;gap:6px}
+.edit .blk{border:1px dashed var(--line);padding:8px;border-radius:4px}
+.blk-tools{display:flex;gap:4px;flex-wrap:wrap;align-items:center;font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.blk-tools .lbl{margin-right:auto;text-transform:uppercase;letter-spacing:.06em}
+.addrow{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+select.sel,input.inp{font:14px var(--f-body);padding:5px 8px;border:1px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink)}
+.savebar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--ink);color:var(--bg);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;font-size:14px}
+.savebar button.btn{background:var(--bg);color:var(--ink);border-color:var(--bg)}
+.savebar button.btn.pri{background:var(--lagoon);color:var(--paper);border-color:var(--lagoon)}
+.msg{font-size:13px}
+.x{border:0;background:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:0 4px}
+.x:hover{color:var(--warn)}
+/* mapa geográfico */
+.mapbox{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:700px){.mapbox{grid-template-columns:1fr}}
+.mapsvg{background:var(--paper);border:1px solid var(--line);min-width:0}
+.mapsvg svg{display:block;width:100%;height:auto}
+.mapsvg .grid{stroke:var(--line);stroke-width:1}
+.mapsvg .glbl{fill:var(--muted);font:10px var(--f-mono)}
+.mapsvg .seg-pave{stroke:var(--ink);stroke-width:3.5;fill:none;stroke-linecap:round}
+.mapsvg .seg-gravel{stroke:var(--gravel);stroke-width:3.5;fill:none;stroke-dasharray:7 5}
+.mapsvg .seg-ferry{stroke:var(--lagoon);stroke-width:3;fill:none;stroke-dasharray:2 5;stroke-linecap:round}
+.mapsvg .side{stroke:var(--muted);stroke-width:1;fill:none;stroke-dasharray:2 3}
+.mapsvg .lead{stroke:var(--line);stroke-width:1;fill:none}
+.mapsvg .pt{cursor:pointer}
+.mapsvg .pt circle{fill:var(--paper);stroke:var(--ink);stroke-width:2.5}
+.mapsvg .pt.fuel circle{fill:var(--ink)}
+.mapsvg .pt.ferry circle{stroke:var(--lagoon)}
+.mapsvg .pt.off circle{stroke:var(--muted)}
+.mapsvg .pt text{fill:var(--ink);font:600 12px var(--f-body)}
+.mapsvg .pt.off text{fill:var(--muted);font-weight:400}
+.mapsvg .pt text tspan.tg{fill:var(--muted);font:10px var(--f-mono)}
+.mapsvg .pt.sel circle{stroke:var(--warn);stroke-width:4}
+.mapsvg .pt.sel text{fill:var(--warn)}
+.mapsvg .pt:focus-visible{outline:none}.mapsvg .pt:focus-visible circle{stroke:var(--lagoon);stroke-width:5}
+.mapsvg .me{fill:var(--warn)} .mapsvg .me-ring{fill:none;stroke:var(--warn);stroke-width:2}
+@media (prefers-reduced-motion:no-preference){.mapsvg .me-ring{animation:ping 1.8s ease-out infinite;transform-box:fill-box;transform-origin:center}}
+@keyframes ping{0%{transform:scale(.6);opacity:1}100%{transform:scale(2.2);opacity:0}}
+.side-panel{display:grid;gap:12px;min-width:0}
+.card{background:var(--paper);border:1px solid var(--line);padding:12px 14px;display:grid;gap:8px}
+.card h4{margin:0;font-family:var(--f-display);font-size:24px;text-transform:uppercase;line-height:1}
+.card .coord{font:12px var(--f-mono);color:var(--muted)}
+.links{display:flex;gap:6px;flex-wrap:wrap}
+.links a{font:600 13px var(--f-body);text-decoration:none;border:1px solid var(--lagoon);color:var(--lagoon);padding:5px 10px;border-radius:4px}
+.links a.pri{background:var(--lagoon);color:var(--paper)}
+.posrow{display:flex;gap:6px;flex-wrap:wrap}
+.posrow input{flex:1 1 180px;min-width:0;font-family:var(--f-mono)}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:14px}
+.kv dt{color:var(--muted)} .kv dd{margin:0;font-weight:600;font-variant-numeric:tabular-nums}
+.err{color:var(--warn);font-size:13px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+<div id="app"></div>
+<script type="application/json" id="guide-data">
+{"meta":{"titulo":"Carretera Austral en Discovery 4","subtitulo":"Guía práctica de ruta, barcazas, combustible y preparación del vehículo — Puerto Montt → Villa O’Higgins","verificado":"2026-10-12","editado":"2026-10-12","aviso":"Horarios, tarifas y cortes de ruta cambian con frecuencia: confirma siempre con el operador o con Vialidad antes de cada tramo. Escrita para un Land Rover Discovery 4 3.0 V6 diésel HSE station wagon, con suspensión neumática y Starlink.","stats":[{"v":"1.240","u":"km","l":"Puerto Montt → Villa O’Higgins"},{"v":"70","u":"%","l":"del trazado sigue en ripio"},{"v":"3","u":"","l":"barcazas en la ruta completa"},{"v":"14–18","u":"días","l":"para hacerla sin apuro"}]},
+"secciones":[
+{"id":"resumen","t":"Resumen en 30 segundos","b":[{"type":"list","items":["**Distancia:** ~1.240 km de Puerto Montt a Villa O’Higgins; cerca del 70 % sigue siendo ripio. En ripio calcula 40–50 km/h de promedio, no lo que dice Google Maps.","**Dos barcazas obligatorias en el norte:** La Arena–Puelche (sin reserva) y la Ruta Bimodal Hornopirén–Caleta Gonzalo (reserva obligatoria en la práctica). Una tercera, Puerto Yungay–Río Bravo, si vas hasta Villa O’Higgins.","Tu Discovery 4 sobra en capacidad 4x4: la ruta se puede hacer en 4x2. Lo que importa es neumáticos, suspensión neumática, filtros y autonomía. Con 82 L de estanque tienes buen margen entre estaciones.","**Regla de oro del combustible:** carga en cada estación que veas; entre algunas hay más de 200 km.","Taller serio sólo en Coyhaique. Fuera de ahí, gomerías y mecánica básica: lleva repuestos.","Octubre–diciembre 2026: hay obras de pavimentación con cortes totales en horarios fijos (ver Obras y cortes)."]}]},
+{"id":"mapa","t":"Mapa y posición","b":[{"type":"p","text":"Toca un punto para ver qué hay ahí y abrirlo en Google Maps u OpenStreetMap. Las coordenadas son aproximadas al centro de cada localidad."},{"type":"map","pts":[{"n":"Puerto Montt","lat":"-41.469","lon":"-72.942","k":"pave","ruta":"si","tags":"combustible, taller"},{"n":"Caleta La Arena","lat":"-41.687","lon":"-72.643","k":"ferry","ruta":"si","tags":"barcaza"},{"n":"Caleta Puelche","lat":"-41.735","lon":"-72.651","k":"pave","ruta":"si","tags":"barcaza"},{"n":"Hornopirén","lat":"-41.963","lon":"-72.466","k":"ferry","ruta":"si","tags":"combustible, barcaza"},{"n":"Caleta Gonzalo","lat":"-42.561","lon":"-72.600","k":"gravel","ruta":"si","tags":"barcaza"},{"n":"Chaitén","lat":"-42.917","lon":"-72.709","k":"pave","ruta":"si","tags":"combustible"},{"n":"Villa Santa Lucía","lat":"-43.411","lon":"-72.370","k":"pave","ruta":"si","tags":"sin cajero"},{"n":"La Junta","lat":"-43.972","lon":"-72.403","k":"pave","ruta":"si","tags":"combustible"},{"n":"Puyuhuapi","lat":"-44.326","lon":"-72.557","k":"gravel","ruta":"si","tags":"combustible (sólo diésel)"},{"n":"Mañihuales","lat":"-45.172","lon":"-72.149","k":"pave","ruta":"si","tags":"combustible"},{"n":"Coyhaique","lat":"-45.571","lon":"-72.068","k":"pave","ruta":"si","tags":"combustible, taller"},{"n":"Villa Cerro Castillo","lat":"-46.120","lon":"-72.155","k":"gravel","ruta":"si","tags":"combustible"},{"n":"Puerto Río Tranquilo","lat":"-46.625","lon":"-72.674","k":"gravel","ruta":"si","tags":"combustible"},{"n":"Cochrane","lat":"-47.254","lon":"-72.573","k":"gravel","ruta":"si","tags":"combustible"},{"n":"Puerto Yungay","lat":"-47.966","lon":"-73.379","k":"ferry","ruta":"si","tags":"barcaza"},{"n":"Río Bravo","lat":"-48.010","lon":"-73.140","k":"gravel","ruta":"si","tags":"barcaza"},{"n":"Villa O’Higgins","lat":"-48.467","lon":"-72.562","k":"end","ruta":"si","tags":"combustible, sin cajero"},{"n":"Futaleufú","lat":"-43.185","lon":"-71.867","k":"end","ruta":"no","tags":"combustible"},{"n":"Puerto Cisnes","lat":"-44.727","lon":"-72.683","k":"end","ruta":"no","tags":"combustible"},{"n":"Puerto Aysén","lat":"-45.403","lon":"-72.692","k":"end","ruta":"no","tags":"combustible"},{"n":"Chile Chico","lat":"-46.541","lon":"-71.724","k":"end","ruta":"no","tags":"combustible"},{"n":"Caleta Tortel","lat":"-47.798","lon":"-73.534","k":"end","ruta":"no","tags":"sin cajero"}]},{"type":"note","tone":"info","title":"GPS en tiempo real","text":"En la versión web pública, el botón «Usar GPS del teléfono» sigue tu posición en vivo sobre este mapa. Dentro de Claude ese botón no aparece y el punto azul lo da la app de mapas. Con el Starlink encendido el teléfono tiene datos en todo el trayecto, así que Google Maps y WhatsApp pueden mostrar y compartir tu posición aunque no haya señal celular. Para ver tu posición en este mapa, pega tus coordenadas en el cuadro de arriba: en Google Maps, mantén presionado sobre el punto azul y copia los números que aparecen.","hasta":""},{"type":"src","text":"Coordenadas aproximadas de cada localidad. Distancias calculadas en línea recta; por camino siempre son mayores."}]},
+{"id":"conectividad","t":"Starlink y apps gratis","b":[{"type":"h","text":"Starlink en el Land Rover"},{"type":"list","items":["**Uso en movimiento:** según una prueba publicada en julio de 2026, el Starlink Mini funciona andando con plan Roam. Revisa en la app que tu plan contrate y permita uso en movimiento en Chile. [Por confirmar con Starlink]","**Consumo:** el Mini usa unos 20–40 W y la antena Standard unos 75–100 W. A 12 V, el Mini consume del orden de 2–3 A: más de 50 Ah en 24 horas. Apágalo de noche si no tienes batería auxiliar. [Cálculo propio]","**Montaje:** necesita cielo despejado. En el tablero funciona, pero sobre el techo o la parrilla recibe mejor señal. Fíjalo firme: la calamina del ripio suelta todo lo que no esté bien sujeto.","En bosque cerrado (Pumalín, Queulat) y bajo cerros altos la señal puede cortarse por obstrucción. Abre la app de Starlink y usa el chequeo de obstrucciones al acampar. [Inferencia]","Igual descarga los mapas sin conexión: si la antena falla, los mapas offline siguen funcionando."]},{"type":"src","text":"Fuente: SatelliteInternet.com, Can You Use Starlink Mini While Driving? (jul. 2026)."},{"type":"h","text":"Apps gratis para la ruta"},{"type":"table","cols":["App","Para qué sirve en la Carretera Austral","Costo"],"rows":[["[Google Maps](https://maps.google.com)","Navegación con el punto azul en vivo, mapas sin conexión y compartir ubicación en tiempo real con la familia.","Gratis"],["[Organic Maps](https://organicmaps.app)","Mapas de OpenStreetMap completamente sin conexión, con navegación y senderos. Descarga la región de Aysén y Los Lagos antes de salir.","Gratis"],["[OsmAnd](https://osmand.net)","Mapas sin conexión más detallados, con curvas de nivel y registro de tu recorrido (track GPX).","Gratis con límites; extras de pago"],["[iOverlander](https://www.ioverlander.com)","Campings, agua, combustible, gomerías y reportes recientes de otros viajeros.","Gratis"],["[Windy](https://www.windy.com)","Lluvia, viento y nieve por hora. Clave para la cuesta de Queulat y Cerro Castillo.","Gratis; premium opcional"],["WhatsApp — ubicación en tiempo real","Comparte tu posición por 15 min, 1 h u 8 h con un grupo familiar.","Gratis"],["[Wikiloc](https://www.wikiloc.com)","Rutas de trekking (Cerro Castillo, Queulat, Volcán Chaitén).","Gratis; premium opcional"],["App de Starlink","Estado de la conexión, chequeo de obstrucciones y apagado remoto.","Incluida"],["[MOP Aysén en X](https://x.com/MOPAysen)","Cortes, desvíos y estado del camino del día.","Gratis"]]},{"type":"note","tone":"info","title":"Rutina diaria recomendada","text":"Al salir: revisa MOP Aysén y Windy, comparte la ubicación en tiempo real por WhatsApp o Google Maps por 8 horas y confirma dónde está el próximo combustible en el mapa de esta guía. Al llegar: guarda la posición del campamento y descarga el mapa del tramo siguiente.","hasta":""}]},
+{"id":"ruta","t":"La ruta tramo a tramo","b":[{"type":"route","stops":[{"n":"Puerto Montt","s":"46 km asfalto","k":"pave"},{"n":"La Arena","s":"Barcaza 30 min","k":"ferry"},{"n":"Puelche → Hornopirén","s":"Asfalto","k":"pave"},{"n":"Hornopirén","s":"Ruta Bimodal","k":"ferry"},{"n":"Caleta Gonzalo","s":"Ripio · Pumalín","k":"gravel"},{"n":"Chaitén","s":"Pavimento","k":"pave"},{"n":"La Junta","s":"Pavimento","k":"pave"},{"n":"Puyuhuapi","s":"Mixto · cuesta Queulat","k":"gravel"},{"n":"Coyhaique","s":"Pavimento","k":"pave"},{"n":"Villa Cerro Castillo","s":"Ripio continuo","k":"gravel"},{"n":"Puerto Río Tranquilo","s":"Ripio","k":"gravel"},{"n":"Cochrane","s":"Ripio","k":"gravel"},{"n":"Puerto Yungay","s":"Barcaza a Río Bravo","k":"ferry"},{"n":"Villa O’Higgins","s":"Fin de la ruta","k":"end"}]},{"type":"p","text":"Esquema no a escala. El pavimento termina en Laguna Verde / puente El Manso, al sur de Villa Cerro Castillo."},{"type":"table","cols":["Tramo","Superficie","Notas para el Land Rover"],"rows":[["Puerto Montt → Caleta La Arena (46 km)","Asfalto","Barcaza a Puelche, 30 min."],["Puelche → Hornopirén","Asfalto","Llega con margen: en la Bimodal hay que presentarse con mucha anticipación."],["Hornopirén → Caleta Gonzalo","Barcaza + 15 min de tierra","Ruta Bimodal (Leptepu – Fiordo Largo)."],["Caleta Gonzalo → Chaitén","Ripio","Parque Pumalín. Bosque húmedo, curvas."],["Chaitén → Villa Santa Lucía","Pavimento (3 tramos cortos de ripio)","Desvío opcional a Futaleufú: todo ripio, cuestas."],["Villa Santa Lucía → Puyuhuapi","Pavimento","—"],["Parque Queulat (cuesta)","Mixto","Curvas cerradas, ripio suelto. Baja la velocidad con lluvia."],["Piedra El Gato → Mañihuales → Coyhaique","Pavimento vía Ruta 240 (camino Viviana)","Por Villa Ortega (Ruta 7) es tierra."],["Coyhaique → Villa Cerro Castillo","Pavimento","Posible nieve/escarcha en la cuesta aún en primavera."],["Cerro Castillo → Villa O’Higgins","Ripio continuo","Incluye desvíos a Bahía Exploradores, Chile Chico y Tortel. Aquí sufre la suspensión."]]},{"type":"src","text":"Fuente: carretera-austral.cl – Estado de los caminos (act. abril 2026)."},{"type":"h","text":"Distancias de referencia"},{"type":"table","cols":["Desde → Hasta","Km aprox.","Tiempo realista"],"rows":[["Puerto Montt → Chaitén","240 km (+ barcazas)","1 día completo"],["Chaitén → Coyhaique","421 km","1,5–2 días con paradas"],["Coyhaique → Puerto Río Tranquilo","218 km","4–5 h"],["Cochrane → Villa O’Higgins","~230 km (+ barcaza)","5–6 h"],["Puerto Montt → Villa O’Higgins","~1.224–1.240 km","29–35 h de manejo puro"]]},{"type":"p","text":"Cuenta con unos 14–18 días para hacerla completa sin apuro, y 21 o más si sumas Futaleufú, Tortel y Parque Patagonia."},{"type":"src","text":"Distancias: Worldly Adventurer, carretera-austral.cl y Bryan Kevan."}]},
+{"id":"barcazas","t":"Barcazas: lo que debes reservar","b":[{"type":"h","text":"Caleta La Arena ↔ Caleta Puelche (Transportes del Estuario)"},{"type":"list","items":["Cruce de 30 min. Sale cada 30 min de día y cada 1,5 h entre medianoche y las 6:00.","**Sin reserva:** se paga al llegar y se embarca por orden de llegada.","Auto/camioneta: $11.510. Pasajeros: gratis."]},{"type":"h","text":"Ruta Bimodal Hornopirén ↔ Caleta Gonzalo (Naviera Somarco)"},{"type":"p","text":"Es el cuello de botella del viaje. Hornopirén → Leptepu (≈3 h 30 min), 15 min por tierra hasta Fiordo Largo y una segunda barcaza a Caleta Gonzalo (≈45 min). El pasaje cubre ambos tramos."},{"type":"table","cols":["Sentido","Zarpes diarios (ruta subsidiada)"],"rows":[["Hornopirén → Caleta Gonzalo (sur)","10:00 y 18:00"],["Caleta Gonzalo → Hornopirén (norte)","12:30 y 20:00 (el de las 20:00 puede cambiar por marea)"]]},{"type":"table","cols":["Tarifa ruta subsidiada","No residente","Residente"],"rows":[["Autos, Jeep, SUV y camionetas (incluye conductor)","$72.650","$48.400"],["Pasajero adicional","$12.100","$8.050"],["Remolque / camioneta doble rueda trasera (por metro lineal)","$17.150","$13.700"]]},{"type":"note","tone":"warn","title":"Ojo con el equipamiento externo","text":"Si tu Discovery lleva remolque, portabicicletas o un portaequipaje que sobresale mucho, consulta al reservar: los remolques se cobran por metro lineal. Reserva con semanas de anticipación (diciembre–febrero, mínimo 3 semanas) y preséntate temprano: aun con reserva, el embarque es por orden de llegada.","hasta":""},{"type":"src","text":"Fuentes: barcazas.cl – Información de ruta (temporada alta septiembre–abril) y carretera-austral.cl – Barcazas (act. octubre 2026)."},{"type":"h","text":"Alternativa: Puerto Montt → Chaitén directo (Naviera Austral)"},{"type":"p","text":"Cruce largo (≈9 h, con escala en Ayacara), útil si no consigues la Bimodal o quieres ganar un día de manejo. Zarpes casi diarios, muchos a las 23:00. Vehículo menor desde $168.000 (no residente) o $210.000 (extranjero). Fuente: [navieraustral.cl](https://www.navieraustral.cl)."},{"type":"h","text":"Puerto Yungay ↔ Río Bravo (Naviera Transal) — sólo si vas a Villa O’Higgins"},{"type":"p","text":"Cruce corto del Fiordo Mitchell. Embarque por orden de llegada; llega al menos 60 min antes."},{"type":"table","cols":["Temporada media (oct, nov, dic, mar)","Sale de Yungay","Sale de Río Bravo"],"rows":[["Barcaza Padre Antonio Ronchi","10:00 · 12:00 · 16:00 · 18:00","11:00 · 13:00 · 17:00 · 19:00"],["Barcaza Pitipulla","08:00 · 13:00 · 15:00 · 17:00","09:00 · 14:00 · 16:00 · 18:00"]]},{"type":"p","text":"En enero y febrero hay más frecuencias. Los viernes hay un viaje especial de cargas peligrosas a las 08:00."},{"type":"src","text":"Fuente: FerryPatagonia (act. 2 de octubre de 2026)."}]},
+{"id":"cortes","t":"Obras y cortes de ruta","b":[{"type":"p","text":"El Gobierno lanzó el plan “Ruta Austral: Soberanía que Conecta” (≈$800 mil millones, 2026–2030) para pavimentar los tramos pendientes. En la región de Aysén se han pavimentado 614,5 km (58 %) y faltan 443,5 km. En la práctica, esto significa más faenas, desvíos y cortes programados durante tu viaje (Emol, mayo 2026)."},{"type":"note","tone":"warn","title":"Corte total al norte de Cochrane","text":"Corte total entre Confluencia Chacabuco y Pampa González, de lunes a viernes de 11:30 a 15:30. También hay desvíos entre Puente Chacabuco y el límite con Parque Patagonia. Pasa antes de las 11:30, después de las 15:30 o el fin de semana. Confirma con @MOPAysen antes de salir de Río Tranquilo.","hasta":"2026-12-31"},{"type":"list","items":["**Revisa cada mañana:** MOP Aysén en X, la página de Facebook de MOP Aysén y la sección de estado del camino en tiempo real (tiene un canal de WhatsApp).","En temporada fría hay cortes preventivos nocturnos por hielo en la Ruta 7 Sur. En octubre todavía puede haber escarcha temprano.","Los derrumbes con lluvia fuerte son posibles (por ejemplo, en la cuesta Moraga). Ten siempre medio día de margen en el itinerario."]}]},
+{"id":"combustible","t":"Combustible y autonomía","b":[{"type":"p","text":"El Discovery 4 3.0 V6 diésel tiene un estanque de 82 L y un consumo oficial mixto de 8,8 L/100 km (SDV6 HSE). Cargado, con neumáticos AT, Starlink en el techo y en ripio, cuenta con 11–13 L/100 km. [Inferencia]"},{"type":"table","cols":["Escenario","Consumo","Autonomía con 82 L"],"rows":[["Ficha oficial (mixto)","8,8 L/100 km","~930 km"],["Ripio, cargado [Inferencia]","11–13 L/100 km","~630–745 km"],["Margen para planificar","—","550 km"]]},{"type":"p","text":"Ningún tramo entre estaciones de la ruta principal supera esa autonomía, así que no necesitas bidón. Igual carga en cada pueblo: las estaciones pequeñas se quedan sin stock. [Inferencia]"},{"type":"src","text":"Fuentes: GoAuto, Discovery 4 SDV6 HSE (ficha técnica); UltimateSpecs, Discovery 4 2013 3.0 TDV6."},{"type":"p","text":"**Dónde hay combustible:** Hornopirén, Chaitén, Futaleufú, La Junta, Puyuhuapi (sólo diésel), Puerto Cisnes, Mañihuales, Puerto Aysén, Puerto Chacabuco, Coyhaique, Villa Cerro Castillo, Puerto Río Tranquilo, Chile Chico, Cochrane y Villa O’Higgins (Worldly Adventurer). Algunas estaciones pequeñas pueden quedarse sin stock: carga siempre que puedas."},{"type":"note","tone":"info","title":"Consejo para el V6 diésel","text":"Los inyectores common-rail son sensibles a la calidad del combustible. Carga de preferencia en estaciones con rotación (Copec o surtidores de pueblos grandes), lleva un filtro de petróleo de repuesto y atiende de inmediato cualquier testigo de agua en el combustible.","hasta":""}]},
+{"id":"vehiculo","t":"Preparación del Discovery 4","b":[{"type":"table","cols":["Ficha","Dato"],"rows":[["Vehículo","Land Rover Discovery 4 station wagon 3.0 V6 diésel HSE"],["Potencia / torque (SDV6)","183 kW · 600 Nm"],["Estanque","82 L"],["Peso en orden de marcha","2.570 kg"],["Neumático de serie","255/55 R19 (algunas versiones HSE traen llanta 20\")"],["Rueda de repuesto","Tamaño completo"],["Suspensión","Neumática, con altura off-road; Terrain Response"]]},{"type":"src","text":"Fuentes: GoAuto (SDV6 HSE) y UltimateSpecs (2013 3.0 TDV6). Confirma potencia y medida de neumático con el padrón y las llantas de tu unidad."},{"type":"h","text":"Puntos débiles conocidos del Discovery 4 3.0 V6 diésel"},{"type":"table","cols":["Componente","Qué se ha visto","Qué hacer antes del viaje"],"rows":[["Metales de bancada del cigüeñal","En motores 2009–2012 los metales podían quedar mal ubicados o girar, con falla repentina. Señales: golpeteo que empeora con carga y luz de presión de aceite. Diseño nuevo desde 2012 (boletín SSM72928).","Pide al taller que confirme por VIN si tu motor tiene el diseño nuevo y que escuche el motor en caliente."],["Sensor de posición del cigüeñal","Unidades fabricadas entre el 2-abr-2012 y el 2-may-2013 pueden apagarse andando, perdiendo asistencia de freno y dirección. Hay campaña de seguridad (PRA 2016/15505).","Verifica con Land Rover por VIN que la campaña esté aplicada. Es lo primero que revisaría en un 2013."],["Compresor de suspensión neumática","Fallas en 2010–2012 (testigo encendido, el auto no sube). Reemplazo por compresor AMK de nuevo diseño (LR044360).","Revisa marca del compresor y fugas de los fuelles con agua jabonosa. Lleva escáner."],["Cañerías del enfriador de la caja automática","Roce y fuga en unidades 2010–2013 por soporte mal pintado o abrazadera floja.","Inspección visual bajo el auto; el ripio y la vibración aceleran el roce."],["Caja de transferencia","Vibración o zumbido a 2.400–2.800 rpm al acelerar (2010–2014). Se corrige con un amortiguador de vibración.","Si lo notas, que lo revise el taller antes de salir."],["Dirección hidráulica","Fugas por los O-rings de las mangueras (2009–2013).","Revisa nivel y humedad en las uniones."],["Filtro de partículas (DPF)","Se tapa con uso urbano y trayectos cortos.","Haz un viaje largo de carretera antes de salir y escanea los códigos."]]},{"type":"src","text":"Fuente: australiancar.reviews, Land Rover Discovery 4 (L319) problems. Correa de distribución, aceite y su capacidad: según el plan de mantención de tu unidad. [Por confirmar con el taller]"},{"type":"h","text":"Suspensión neumática en ripio"},{"type":"list","items":["Usa la altura off-road sólo a baja velocidad: el sistema baja solo al subir la velocidad. Revisa en el manual a qué velocidad lo hace. [Por confirmar]","En ripio, usa el programa Terrain Response de grava/pasto/nieve y deja el modo normal en el pavimento.","Si se enciende el testigo de suspensión, detente, apaga y vuelve a encender antes de seguir. Si el auto queda bajo, avanza despacio hasta el próximo pueblo y lee el código con el escáner.","El Discovery pesa 2,6 t: los neumáticos y los fuelles trabajan más que en un 4x4 liviano. No sobrecargues el techo, donde ya va el Starlink. [Inferencia]"]},{"type":"h","text":"Mantención antes de salir (taller de confianza)"},{"type":"check","items":[{"t":"Cambio de aceite y filtros (aceite, petróleo y aire). Lleva un filtro de aire extra: el polvo del ripio lo satura rápido.","d":false},{"t":"Escaneo de códigos de falla (DPF, EGR, suspensión, sensores) con equipo para JLR.","d":false},{"t":"Confirmar por VIN la campaña del sensor de posición del cigüeñal (PRA 2016/15505).","d":false},{"t":"Prueba de fugas de los fuelles y estado del compresor de suspensión.","d":false},{"t":"Revisar cañerías del enfriador de la caja automática y nivel de dirección hidráulica.","d":false},{"t":"Correa de distribución y aceite al día según el plan de mantención.","d":false},{"t":"Frenos: pastillas a más del 50 %, líquido nuevo (las bajadas largas en ripio exigen mucho).","d":false},{"t":"Suspensión: amortiguadores sin fugas, bujes, rótulas y terminales de dirección. El amortiguador de dirección suele sufrir con la calamina del ripio.","d":false},{"t":"Correa de accesorios, bomba de agua y mangueras de refrigerante.","d":false},{"t":"Aprietes de ruedas, crucetas de cardanes y engrase.","d":false},{"t":"Batería en buen estado: el Discovery tiene mucha electrónica y el Starlink suma consumo.","d":false},{"t":"Luz de cola, focos y limpiaparabrisas funcionando: hay mucha neblina y lluvia.","d":false}]},{"type":"h","text":"Neumáticos — lo más importante"},{"type":"list","items":["Usa neumáticos All-Terrain de carga reforzada (LT / C) con buena cocada. Las piedras filosas del ripio cortan los costados de los neumáticos de carretera.","El Discovery 4 trae repuesto de tamaño completo. Una segunda rueda ayuda si tienes cómo llevarla: las gomerías no están en todas las localidades.","Para 255/55 R19 la oferta de All-Terrain es menor que en llanta 17 o 18. Si piensas bajar de aro, confirma antes con el taller que los calipers del 3.0 V6 permiten esa llanta. [Por confirmar]","Kit de reparación de tarugos, compresor de 12 V, manómetro, gata hi-lift o de botella con base ancha, y llave de ruedas que funcione con tus tuercas antirrobo.","En ripio, baja la presión unas 3–5 psi respecto a la de carretera (más confort y menos cortes). Vuelve a subirla al llegar al asfalto."]},{"type":"h","text":"Kit de repuestos"},{"type":"check","items":[{"t":"Aceite motor 2 L, refrigerante 2 L, líquido de frenos","d":false},{"t":"Fusibles y relés surtidos","d":false},{"t":"Ampolletas de focos","d":false},{"t":"Precintos, alambre, cinta americana y masilla epóxica","d":false}]},{"type":"h","text":"Herramientas y seguridad"},{"type":"check","items":[{"t":"Juego de llaves y dados (métrico)","d":false},{"t":"Escáner OBD (ej. con app compatible JLR)","d":false},{"t":"Eslinga de arrastre + 2 grilletes","d":false},{"t":"Pala plegable y guantes","d":false},{"t":"Cables de partida o booster","d":false},{"t":"Extintor, botiquín, triángulos y chaleco","d":false},{"t":"Linterna frontal","d":false}]}]},
+{"id":"manejo","t":"Técnica de manejo en ripio","b":[{"type":"list","items":["**Velocidad:** 50–60 km/h como máximo en ripio consolidado y menos con piedra suelta o calamina. El Discovery es alto y pesado: no lo tires rápido en curva.","Frena antes de la curva, no en ella. Con 2,6 t, la distancia de frenado en ripio es larga.","**4x4:** el Discovery 4 tiene tracción permanente y Terrain Response, que ajusta diferenciales y control de tracción solo. Usa el programa de grava en ripio y la reductora sólo para cuestas muy empinadas o maniobras lentas.","En bajadas largas usa el modo manual de la caja automática para frenar con el motor y no recalentar los frenos.","En curvas ciegas, ve bien pegado a tu derecha. En las cuestas, el que sube tiene preferencia.","Al cruzarte con ciclistas, baja la velocidad y abre distancia para no tirarles piedras ni polvo. Hay muchos en temporada.","Enciende las luces todo el día y deja más distancia con el vehículo de adelante: el polvo y las piedras proyectadas rompen parabrisas y focos.","Detente a ayudar a quien esté en pana si es seguro hacerlo. Aquí funciona así."]},{"type":"src","text":"Basado en carretera-austral.cl y experiencia general de conducción off-road."}]},
+{"id":"itinerario","t":"Itinerario sugerido (16 días, norte → sur)","b":[{"type":"table","cols":["Día","Ruta","Nota"],"rows":[["1","Puerto Montt → Hornopirén","Barcaza La Arena. Duerme en Hornopirén para tomar la Bimodal de las 10:00."],["2","Hornopirén → Caleta Gonzalo → Pumalín","Camping o cabañas en el parque."],["3","Pumalín (trekking Volcán Chaitén) → Chaitén","Carga combustible y retira efectivo."],["4–5","Chaitén → Futaleufú (desvío)","Rafting y Lago Espolón. Ripio con cuestas."],["6","Futaleufú → La Junta → Puyuhuapi","Carga combustible en La Junta."],["7","Parque Queulat (Ventisquero Colgante)","Ve con cuidado en la cuesta de Queulat."],["8","Puyuhuapi → Coyhaique","Revisión del vehículo, supermercado y gomería."],["9","Coyhaique → Villa Cerro Castillo","Fin del pavimento."],["10","Cerro Castillo → Puerto Río Tranquilo","Capillas de Mármol (salida en bote temprano)."],["11","Bahía Exploradores (ida y vuelta)","Opcional. Ripio angosto."],["12","Río Tranquilo → Cochrane / Parque Patagonia","Ojo con el horario del corte (11:30–15:30 L–V)."],["13","Cochrane → Caleta Tortel","Sin cajero: lleva efectivo."],["14","Tortel → Puerto Yungay → Villa O’Higgins","Barcaza Río Bravo. Llena el estanque en Villa O’Higgins."],["15–16","Regreso al norte o salida por Chile Chico → Argentina","Ver Alternativas."]]},{"type":"src","text":"Basado en el plan de 16 días de carretera-austral.cl, adaptado al ritmo de un Discovery 4 cargado."}]},
+{"id":"argentina","t":"Alternativas sin Bimodal y salida por Argentina","b":[{"type":"p","text":"Si no consigues cupo en la Bimodal, puedes entrar por Argentina (Esquel/Trevelin) por el Paso Futaleufú o por Coyhaique Alto por el Paso Huemules. Te pierdes Pumalín, pero conservas lo mejor de la ruta (GT Overlander). Para cruzar la frontera con un vehículo chileno necesitas:"},{"type":"check","items":[{"t":"Padrón / certificado de inscripción del vehículo","d":false},{"t":"Seguro obligatorio para Argentina (Carta Verde / seguro Mercosur)","d":false},{"t":"Autorización notarial del dueño si el auto no está a tu nombre","d":false},{"t":"Revisión técnica y permiso de circulación vigentes","d":false},{"t":"Control SAG: no lleves frutas, carnes ni lácteos frescos","d":false}]}]},
+{"id":"util","t":"Dinero, señal y datos útiles","b":[{"type":"list","items":["**Sin cajeros automáticos:** Villa Santa Lucía, Caleta Tortel y Villa O’Higgins (Austral Bikes). Lleva efectivo para gomerías, campings y estaciones pequeñas.","**Señal celular:** intermitente entre pueblos. El Starlink cubre ese hueco, pero descarga igual los mapas sin conexión (Google Maps / Organic Maps / iOverlander).","**Clima de octubre–noviembre:** menos gente y alojamiento disponible, pero noviembre suele ser lluvioso y en altura puede nevar. Lleva cadenas si vas antes de mediados de noviembre o si haces Cerro Castillo temprano. La mejor época es de noviembre a marzo.","**Mecánico:** Coyhaique tiene talleres completos. En el resto de los pueblos hay mecánica básica. Una falla grave en un tramo remoto significa grúa o esperar ayuda."]},{"type":"note","tone":"info","title":"Teléfonos","text":"Asistencia en ruta / seguro: [por completar]\nEmergencias en Chile: Carabineros 133 · Ambulancia 131 · Bomberos 132.","hasta":""}]},
+{"id":"documentos","t":"Checklist final de documentos","b":[{"type":"check","items":[{"t":"Licencia de conducir vigente (y licencia internacional si eres extranjero)","d":false},{"t":"Padrón, permiso de circulación, revisión técnica y SOAP vigentes","d":false},{"t":"Reserva de la Ruta Bimodal impresa o en el teléfono","d":false},{"t":"Seguro para Argentina si vas a cruzar","d":false},{"t":"Teléfono de asistencia en ruta [por completar]","d":false}]}]},
+{"id":"fuentes","t":"Fuentes principales","b":[{"type":"list","items":["[carretera-austral.cl](https://www.carretera-austral.cl) — Estado de los caminos (abril 2026) y Barcazas (octubre 2026)","[Naviera Somarco / barcazas.cl](https://www.barcazas.cl) — Información de ruta y tarifas","[Naviera Austral](https://www.navieraustral.cl) — Puerto Montt–Chaitén","FerryPatagonia — Horarios Fiordo Mitchell 2026","Emol — Plan de pavimentación Carretera Austral (mayo 2026)","Worldly Adventurer — Carretera Austral 2026 Guide","[GoAuto — Discovery 4 SDV6 HSE, ficha técnica](https://www.goauto.com.au/car-reviews/land-rover/discovery/4-sdv6-hse/2015-12-14/50359.html)","[UltimateSpecs — Discovery 4 2013 3.0 TDV6](https://www.ultimatespecs.com/car-specs/Land-Rover/66949/Land-Rover-Discovery-4-2013-30-TDV6-211HP-SE.html)","[australiancar.reviews — Discovery 4 (L319), problemas conocidos](https://www.australiancar.reviews/?p=47182)","GT Overlander — Carretera Austral by car","[SatelliteInternet.com — Starlink Mini en movimiento (jul. 2026)](https://www.satelliteinternet.com/resources/starlink-mini-while-driving/)"]}]}
+]}
+</script>
+<script id="app-js">
+(function(){
+"use strict";
+var app=document.getElementById("app");
+var S=JSON.parse(document.getElementById("guide-data").textContent);
+var ORIG=JSON.stringify(S);
+var editing=false, dirty=false, canWrite=false, readOnlyNote="", artifactNs=null, pendingDel=null, busy=false;
+var LKEY="ca-checks-v1", local={};
+try{local=JSON.parse(localStorage.getItem(LKEY)||"{}")||{}}catch(e){local={}}
+var TYPES={p:"Párrafo",h:"Subtítulo",list:"Lista",check:"Checklist",table:"Tabla",note:"Aviso",src:"Fuente",route:"Esquema de tramos",map:"Mapa con puntos"};
+var PKEY="ca-pos-v1", pos=null, posErr="", sel=null;
+try{pos=JSON.parse(localStorage.getItem(PKEY)||"null")}catch(e){pos=null}
+function num(v){return parseFloat(String(v).replace(",","."))}
+function hav(a,b,c,d){var r=Math.PI/180,dl=(c-a)*r,dn=(d-b)*r,x=Math.pow(Math.sin(dl/2),2)+Math.cos(a*r)*Math.cos(c*r)*Math.pow(Math.sin(dn/2),2);return 12742*Math.asin(Math.sqrt(x))}
+function km(x){return Math.round(x).toLocaleString("es-CL")+" km"}
+function gq(la,lo){return "https://www.google.com/maps/search/?api=1&query="+la+","+lo}
+function gdir(la,lo){return "https://www.google.com/maps/dir/?api=1&destination="+la+","+lo+"&travelmode=driving"}
+function osm(la,lo){return "https://www.openstreetmap.org/?mlat="+la+"&mlon="+lo+"#map=13/"+la+"/"+lo}
+function has(p,w){return (p.tags||"").toLowerCase().indexOf(w)>=0}
+function shortTags(p){var t=[];if(has(p,"combustible"))t.push("COMB");if(has(p,"barcaza"))t.push("BARC");if(has(p,"taller"))t.push("TALLER");if(has(p,"sin cajero"))t.push("SIN CAJERO");return t.join(" · ")}
+function nearest(P,f){var best=null;P.forEach(function(p){if(f&&!f(p))return;var d=hav(pos.lat,pos.lon,p.lat,p.lon);if(!best||d<best.d)best={p:p,d:d}});return best}
+
+function renderMap(b,k){
+  var P=b.pts.map(function(p,i){return{i:i,n:p.n,lat:num(p.lat),lon:num(p.lon),k:p.k,on:p.ruta!=="no",tags:p.tags||""}}).filter(function(p){return isFinite(p.lat)&&isFinite(p.lon)});
+  var h="";
+  if(P.length){
+    var la=P.map(function(p){return p.lat}),lo=P.map(function(p){return p.lon});
+    var latMax=Math.max.apply(0,la)+.2,latMin=Math.min.apply(0,la)-.2,lonMin=Math.min.apply(0,lo)-.15,lonMax=Math.max.apply(0,lo)+.15;
+    var cs=Math.cos((latMax+latMin)/2*Math.PI/180),S=900/(latMax-latMin),L=44,top=14;
+    var X=function(v){return L+(v-lonMin)*cs*S},Y=function(v){return top+(latMax-v)*S};
+    var mapW=(lonMax-lonMin)*cs*S,labX=L+mapW+26,W=labX+200;
+    var on=P.filter(function(p){return p.on}),g="",segs="",side="",leads="",pts="",prev=-99;
+    for(var d=Math.ceil(latMin);d<=Math.floor(latMax);d++){g+='<line class="grid" x1="'+L+'" x2="'+(labX-8)+'" y1="'+Y(d)+'" y2="'+Y(d)+'"/><text class="glbl" x="4" y="'+(Y(d)+3)+'">'+(-d)+'°S</text>'}
+    for(var i=0;i<on.length-1;i++){var a=on[i],c=on[i+1],kk=["pave","gravel","ferry"].indexOf(a.k)>=0?a.k:"pave";segs+='<path class="seg-'+kk+'" d="M'+X(a.lon).toFixed(1)+" "+Y(a.lat).toFixed(1)+"L"+X(c.lon).toFixed(1)+" "+Y(c.lat).toFixed(1)+'"/>'}
+    P.filter(function(p){return !p.on}).forEach(function(p){var n=null,nd=1e9;on.forEach(function(o){var dd=hav(p.lat,p.lon,o.lat,o.lon);if(dd<nd){nd=dd;n=o}});if(n)side+='<path class="side" d="M'+X(n.lon).toFixed(1)+" "+Y(n.lat).toFixed(1)+"L"+X(p.lon).toFixed(1)+" "+Y(p.lat).toFixed(1)+'"/>'});
+    P.slice().sort(function(a,c){return c.lat-a.lat}).forEach(function(p){
+      var x=X(p.lon),y=Y(p.lat),ly=Math.max(y,prev+17);prev=ly;
+      var cls="pt"+(has(p,"combustible")?" fuel":"")+(has(p,"barcaza")?" ferry":"")+(p.on?"":" off")+(sel===p.i?" sel":"");
+      leads+='<path class="lead" d="M'+(x+7).toFixed(1)+" "+y.toFixed(1)+"L"+(labX-6)+" "+ly.toFixed(1)+'"/>';
+      var st=shortTags(p);
+      pts+='<g class="'+cls+'" tabindex="0" role="button" aria-label="'+esc(p.n)+'" data-act="pt" data-k="'+p.i+'"><circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="6"/><rect x="'+(labX-4)+'" y="'+(ly-10)+'" width="196" height="16" fill="transparent"/><text x="'+labX+'" y="'+(ly+4).toFixed(1)+'">'+esc(p.n)+(st?'<tspan class="tg" dx="6">'+st+"</tspan>":"")+"</text></g>";
+    });
+    var H=Math.max(prev+16,top+900+12),me="";
+    if(pos&&pos.lat<=latMax+1&&pos.lat>=latMin-1&&pos.lon>=lonMin-1&&pos.lon<=lonMax+1){var px=X(pos.lon),py=Y(pos.lat);me='<circle class="me-ring" cx="'+px+'" cy="'+py+'" r="9"/><circle class="me" cx="'+px+'" cy="'+py+'" r="6"/><text class="glbl" x="'+(px-6)+'" y="'+(py-12)+'" text-anchor="end">Tú</text>'}
+    h+='<div class="mapsvg"><svg viewBox="0 0 '+W.toFixed(0)+" "+H.toFixed(0)+'" role="img" aria-label="Mapa de la Carretera Austral con localidades">'+g+side+segs+leads+pts+me+"</svg></div>";
+  } else h+='<div class="card">Agrega puntos con latitud y longitud para dibujar el mapa.</div>';
+  // panel lateral
+  var p0=on&&on[0],pN=on&&on[on.length-1];
+  var sp='<div class="side-panel"><div class="card"><h4>Tu posición</h4>'+
+    (gpsOK?'<div class="links">'+(gpsId!=null?btn("gps-off","","Detener GPS"):btn("gps-on","","Usar GPS del teléfono","pri"))+"</div>"+(gpsInfo?'<div class="prog">'+esc(gpsInfo)+"</div>":""):"")+
+    '<label class="prog" for="pos-in">Pega coordenadas de Google Maps (ej. -45.5712, -72.0685)</label>'+
+    '<div class="posrow"><input class="inp" id="pos-in" inputmode="decimal" autocomplete="off" value="'+(pos?pos.lat+", "+pos.lon:"")+'" placeholder="-45.5712, -72.0685">'+btn("pos-set","","Ubicar","pri")+(pos?btn("pos-clr","","Quitar"):"")+"</div>"+
+    (posErr?'<div class="err">'+esc(posErr)+"</div>":"");
+  if(pos&&P.length){
+    var nn=nearest(P),nf=nearest(P,function(p){return has(p,"combustible")}),nb=nearest(P,function(p){return has(p,"barcaza")}),nt=nearest(P,function(p){return has(p,"taller")});
+    sp+='<dl class="kv"><dt>Más cerca de</dt><dd>'+esc(nn.p.n)+" · "+km(nn.d)+"</dd>"+(nf?"<dt>Combustible</dt><dd>"+esc(nf.p.n)+" · "+km(nf.d)+"</dd>":"")+(nb?"<dt>Barcaza</dt><dd>"+esc(nb.p.n)+" · "+km(nb.d)+"</dd>":"")+(nt?"<dt>Taller completo</dt><dd>"+esc(nt.p.n)+" · "+km(nt.d)+"</dd>":"")+"</dl>"+
+      '<p class="prog">Distancias en línea recta. Por camino son mayores.</p>'+
+      '<div class="links"><a class="pri" href="'+gdir(nf?nf.p.lat:nn.p.lat,nf?nf.p.lon:nn.p.lon)+'" target="_blank" rel="noopener">Ir al combustible más cercano</a><a href="'+gq(pos.lat,pos.lon)+'" target="_blank" rel="noopener">Mi punto en Google Maps</a></div>';
+  }
+  sp+='<div class="links"><a href="https://www.google.com/maps/@?api=1&amp;map_action=map" target="_blank" rel="noopener">Abrir GPS en vivo</a>'+(p0&&pN?'<a href="https://www.google.com/maps/dir/?api=1&amp;origin='+p0.lat+","+p0.lon+"&amp;destination="+pN.lat+","+pN.lon+"&amp;travelmode=driving&amp;waypoints="+on.filter(function(p){return /Chaitén|Coyhaique|Cochrane/.test(p.n)}).map(function(p){return p.lat+","+p.lon}).join("%7C")+'" target="_blank" rel="noopener">Ruta completa en Google Maps</a>':"")+"</div></div>";
+  var sp2=sel!=null&&b.pts[sel]?b.pts[sel]:null;
+  if(sp2){var sl=num(sp2.lat),so=num(sp2.lon);
+    sp+='<div class="card"><h4>'+esc(sp2.n)+'</h4><div class="coord">'+sl+", "+so+(sp2.ruta==="no"?" · desvío fuera de la ruta principal":"")+"</div>"+(sp2.tags?"<div>"+esc(sp2.tags)+"</div>":"")+(pos?'<div class="prog">A '+km(hav(pos.lat,pos.lon,sl,so))+" de ti en línea recta</div>":"")+
+      '<div class="links"><a class="pri" href="'+gdir(sl,so)+'" target="_blank" rel="noopener">Cómo llegar</a><a href="'+gq(sl,so)+'" target="_blank" rel="noopener">Google Maps</a><a href="'+osm(sl,so)+'" target="_blank" rel="noopener">OpenStreetMap</a></div></div>';
+  } else sp+='<div class="card"><span class="prog">Toca un punto del mapa para ver sus datos y abrirlo en tu app de navegación.</span><div class="legend"><span><i></i>Pavimento</span><span><i class="g"></i>Ripio</span><span><i class="f"></i>Barcaza</span><span>● relleno = combustible</span></div></div>';
+  sp+="</div>";
+  h='<div class="mapbox">'+h+sp+"</div>";
+  if(editing){
+    h+='<div class="tbl"><table><thead><tr><th>Nombre</th><th>Lat</th><th>Lon</th><th>Etiquetas</th><th>Tramo siguiente</th><th>En ruta</th><th></th></tr></thead><tbody>'+
+      b.pts.map(function(p,i){var pk=k+".pts."+i;return "<tr><td>"+T(pk+".n",p.n)+"</td><td>"+T(pk+".lat",p.lat)+"</td><td>"+T(pk+".lon",p.lon)+"</td><td>"+T(pk+".tags",p.tags)+"</td><td>"+
+        '<select class="sel" id="mk-'+pk+'" data-sel="'+pk+'.k" aria-label="Tramo siguiente">'+[["pave","Pavimento"],["gravel","Ripio"],["ferry","Barcaza"],["end","Sin tramo"]].map(function(o){return '<option value="'+o[0]+'"'+(o[0]===p.k?" selected":"")+">"+o[1]+"</option>"}).join("")+"</select></td><td>"+
+        '<select class="sel" id="mr-'+pk+'" data-sel="'+pk+'.ruta" aria-label="En ruta principal"><option value="si"'+(p.ruta!=="no"?" selected":"")+'>Sí</option><option value="no"'+(p.ruta==="no"?" selected":"")+">Desvío</option></select></td>"+
+        '<td><button type="button" class="x" data-act="item-del" data-k="'+pk+'" aria-label="Quitar punto">×</button></td></tr>'}).join("")+"</tbody></table></div>"+
+      '<div class="addrow">'+btn("pt-add",k+".pts","+ Punto")+'<span class="prog">Etiquetas reconocidas: combustible, barcaza, taller, sin cajero. El orden de la tabla es el orden de la ruta.</span></div>';
+  }
+  return h;
+}
+
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function fmt(s){ // **negrita** y [texto](url)
+  var h=esc(s);
+  h=h.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>");
+  h=h.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+  return h.replace(/\n/g,"<br>");
+}
+function T(k,text,tag,cls){tag=tag||"span";
+  if(editing) return "<"+tag+(cls?' class="'+cls+'"':"")+' data-k="'+k+'" contenteditable="plaintext-only" spellcheck="true">'+esc(text)+"</"+tag+">";
+  return "<"+tag+(cls?' class="'+cls+'"':"")+">"+fmt(text)+"</"+tag+">";}
+function getP(path){var o=S;path.split(".").forEach(function(p){o=o[p]});return o}
+function setP(path,v){var a=path.split("."),last=a.pop(),o=S;a.forEach(function(p){o=o[p]});o[last]=v}
+function fecha(iso){if(!iso)return"";var m=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"],d=new Date(iso+"T12:00:00");return isNaN(d)?iso:d.getDate()+" "+m[d.getMonth()]+" "+d.getFullYear()}
+function hoyISO(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function diasDesde(iso){return Math.floor((new Date(hoyISO()+"T12:00:00")-new Date(iso+"T12:00:00"))/864e5)}
+function btn(act,k,label,cls,title){return '<button type="button" class="btn sm'+(cls?" "+cls:"")+'" data-act="'+act+'" data-k="'+k+'"'+(title?' aria-label="'+esc(title)+'"':"")+">"+label+"</button>"}
+function delBtn(act,k,label){var p=pendingDel===act+"|"+k;return btn(act,k,p?"¿Borrar? Sí":(label||"Borrar"),"danger")}
+function isDone(k,item){return canWrite?!!item.d:(k in local?!!local[k]:!!item.d)}
+
+function renderBlock(b,k){
+  var h="";
+  switch(b.type){
+  case "p": h=T(k+".text",b.text,"p");break;
+  case "src": h=T(k+".text",b.text,"p","src");break;
+  case "h": h=T(k+".text",b.text,"h3");break;
+  case "list":
+    h='<ul class="lst">'+b.items.map(function(it,i){return "<li>"+T(k+".items."+i,it)+(editing?' <button type="button" class="x" data-act="item-del" data-k="'+k+".items."+i+'" aria-label="Quitar ítem">×</button>':"")+"</li>"}).join("")+"</ul>";
+    if(editing)h+='<div class="addrow">'+btn("item-add",k+".items","+ Ítem")+"</div>";
+    break;
+  case "check":
+    var n=0;b.items.forEach(function(it,i){if(isDone(k+".items."+i,it))n++});
+    h='<div class="prog">'+n+" de "+b.items.length+" listo"+(b.items.length?"":"")+"</div>";
+    h+='<ul class="checks">'+b.items.map(function(it,i){var ik=k+".items."+i,d=isDone(ik,it);
+      return '<li class="'+(d?"done":"")+'"><button type="button" class="box" role="checkbox" aria-checked="'+d+'" data-act="tick" data-k="'+ik+'" aria-label="Marcar">'+(d?'<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6.5l2.5 2.5L10 3.5" fill="none" stroke="currentColor" stroke-width="2.2"/></svg>':"")+"</button>"+T(ik+".t",it.t,"span","txt")+(editing?'<button type="button" class="x" data-act="item-del" data-k="'+ik+'" aria-label="Quitar ítem">×</button>':"")+"</li>"}).join("")+"</ul>";
+    if(editing)h+='<div class="addrow">'+btn("check-add",k+".items","+ Ítem")+(n?btn("check-reset",k+".items","Desmarcar todo"):"")+"</div>";
+    break;
+  case "table":
+    h='<div class="tbl"><table><thead><tr>'+b.cols.map(function(c,i){return "<th>"+T(k+".cols."+i,c)+"</th>"}).join("")+(editing?"<th></th>":"")+"</tr></thead><tbody>"+
+      b.rows.map(function(r,ri){return "<tr>"+r.map(function(c,ci){return '<td class="num">'+T(k+".rows."+ri+"."+ci,c)+"</td>"}).join("")+(editing?'<td><button type="button" class="x" data-act="row-del" data-k="'+k+".rows."+ri+'" aria-label="Quitar fila">×</button></td>':"")+"</tr>"}).join("")+"</tbody></table></div>";
+    if(editing)h+='<div class="addrow">'+btn("row-add",k,"+ Fila")+btn("col-add",k,"+ Columna")+(b.cols.length>1?btn("col-del",k,"− Última columna","danger"):"")+"</div>";
+    break;
+  case "note":
+    var exp=b.hasta&&diasDesde(b.hasta)>0;
+    h='<div class="note'+(b.tone==="warn"?" warn":"")+'">';
+    if(b.hasta||editing)h+=editing?'<label class="prog">Vigente hasta <input class="inp" type="date" id="d-'+k+'" data-date="'+k+'.hasta" value="'+esc(b.hasta)+'"></label>':'<span class="badge'+(exp?" exp":"")+'">'+(exp?"Vencido el ":"Vigente hasta ")+fecha(b.hasta)+(exp?" · revisar":"")+"</span>";
+    h+=T(k+".title",b.title,"strong","t")+T(k+".text",b.text,"p")+"</div>";
+    if(editing)h+='<div class="addrow">'+btn("tone",k,b.tone==="warn"?"Cambiar a informativo":"Cambiar a advertencia")+"</div>";
+    break;
+  case "map": h=renderMap(b,k);break;
+  case "route":
+    h='<ol class="route">'+b.stops.map(function(s,i){return '<li class="k-'+esc(s.k)+'">'+T(k+".stops."+i+".n",s.n,"div","stop")+T(k+".stops."+i+".s",s.s,"div","seg")+
+      (editing?'<div class="addrow"><select class="sel" id="sel-'+k+"-"+i+'" data-sel="'+k+".stops."+i+'.k" aria-label="Tipo de tramo">'+[["pave","Pavimento"],["gravel","Ripio"],["ferry","Barcaza"],["end","Final"]].map(function(o){return '<option value="'+o[0]+'"'+(o[0]===s.k?" selected":"")+">"+o[1]+"</option>"}).join("")+"</select>"+btn("stop-add",k+".stops."+i,"+ Parada abajo")+'<button type="button" class="x" data-act="item-del" data-k="'+k+".stops."+i+'" aria-label="Quitar parada">×</button></div>':"")+"</li>"}).join("")+"</ol>"+
+      '<div class="legend"><span><i></i>Pavimento / mixto</span><span><i class="g"></i>Ripio continuo</span><span><i class="f"></i>Barcaza</span></div>';
+    break;
+  }
+  if(!editing)return '<div class="blk">'+h+"</div>";
+  return '<div class="blk"><div class="blk-tools"><span class="lbl">'+(TYPES[b.type]||b.type)+"</span>"+btn("blk-up",k,"↑",null,"Subir bloque")+btn("blk-down",k,"↓",null,"Bajar bloque")+delBtn("blk-del",k,"Borrar bloque")+"</div>"+h+"</div>";
+}
+
+function render(){
+  var m=S.meta,dd=diasDesde(m.verificado),old=dd>30;
+  var h='<div class="wrap'+(editing?" edit":"")+'">';
+  h+='<header class="hero"><div class="eyebrow"><span>Ruta 7 · Los Lagos → Aysén</span>'+
+    (editing?'<label>Verificado al <input class="inp" type="date" id="verif" data-date="meta.verificado" value="'+esc(m.verificado)+'"></label>':'<span class="verif'+(old?" old":"")+'">Verificado al '+fecha(m.verificado)+(old?" · hace "+dd+" días, revisar":"")+"</span>")+"</div>"+
+    T("meta.titulo",m.titulo,"h1")+T("meta.subtitulo",m.subtitulo,"p","sub")+
+    '<div class="stats">'+m.stats.map(function(s,i){return '<div class="stat"><b>'+T("meta.stats."+i+".v",s.v)+"<small>"+T("meta.stats."+i+".u",s.u)+"</small></b>"+T("meta.stats."+i+".l",s.l)+"</div>"}).join("")+"</div>"+
+    '<div class="note warn">'+T("meta.aviso",m.aviso,"p")+"</div>";
+  if(canWrite)h+='<div class="tools">'+(editing?btn("edit-off","","Terminar edición","pri"):btn("edit-on","","Editar guía","pri"))+"</div>";
+  else if(readOnlyNote)h+='<p class="prog">'+esc(readOnlyNote)+"</p>";
+  h+="</header>";
+  h+='<nav class="toc" aria-label="Secciones">'+S.secciones.map(function(s,i){return '<a href="#'+esc(s.id)+'">'+(i+1)+". "+esc(s.t.split(/[:(]/)[0].trim())+"</a>"}).join("")+"</nav>";
+  S.secciones.forEach(function(s,i){var k="secciones."+i;
+    h+='<section class="sec" id="'+esc(s.id)+'"><div class="sec-head"><span class="sec-num">'+String(i+1).padStart(2,"0")+"</span>"+T(k+".t",s.t,"h2")+"</div>";
+    if(editing)h+='<div class="blk-tools"><span class="lbl">Sección</span>'+btn("sec-up",k,"↑",null,"Subir sección")+btn("sec-down",k,"↓",null,"Bajar sección")+delBtn("sec-del",k,"Borrar sección")+"</div>";
+    s.b.forEach(function(b,j){h+=renderBlock(b,k+".b."+j)});
+    if(editing)h+='<div class="addrow"><select class="sel" id="add-'+i+'" aria-label="Tipo de bloque">'+Object.keys(TYPES).map(function(t){return '<option value="'+t+'">'+TYPES[t]+"</option>"}).join("")+"</select>"+btn("blk-add",k,"+ Agregar bloque")+"</div>";
+    h+="</section>";});
+  if(editing)h+='<div class="addrow" style="padding-block:20px">'+btn("sec-add","","+ Nueva sección","pri")+"</div>";
+  h+='<footer class="foot"><span>Última edición: '+fecha(m.editado)+"</span><span>Toca los cuadros de las checklists para marcar lo que ya tienes listo.</span></footer></div>";
+  if(dirty)h+='<div class="savebar" role="region" aria-label="Cambios sin guardar"><span>Cambios sin guardar</span><button type="button" class="btn" data-act="discard" data-k="">Descartar</button><button type="button" class="btn pri" data-act="save" data-k=""'+(busy?" disabled":"")+">"+(busy?"Guardando…":"Guardar y publicar")+'</button><span class="msg" id="msg"></span></div>';
+  app.innerHTML=h;
+}
+function markDirty(){if(!dirty){dirty=true;render()}}
+function arrMove(path,dir){var a=path.split("."),i=+a.pop(),arr=getP(a.join(".")),j=i+dir;if(j<0||j>=arr.length)return;var t=arr[i];arr[i]=arr[j];arr[j]=t}
+function arrDel(path){var a=path.split("."),i=+a.pop();getP(a.join(".")).splice(i,1)}
+function newBlock(t){return{p:{type:"p",text:"Texto nuevo"},src:{type:"src",text:"Fuente: "},h:{type:"h",text:"Subtítulo"},list:{type:"list",items:["Ítem nuevo"]},check:{type:"check",items:[{t:"Ítem nuevo",d:false}]},table:{type:"table",cols:["Columna 1","Columna 2"],rows:[["",""]]},note:{type:"note",tone:"info",title:"Aviso",text:"Detalle",hasta:""},route:{type:"route",stops:[{n:"Inicio",s:"",k:"pave"},{n:"Fin",s:"",k:"end"}]},map:{type:"map",pts:[{n:"Coyhaique",lat:"-45.571",lon:"-72.068",k:"end",ruta:"si",tags:"combustible, taller"}]}}[t]}
+function setPos(){
+  var v=(document.getElementById("pos-in")||{}).value||"",m=v.match(/-?\d+(?:[.,]\d+)?/g);
+  posErr="";
+  if(!m||m.length<2){posErr="Escribe latitud y longitud, por ejemplo: -45.5712, -72.0685";render();return}
+  var la=-Math.abs(num(m[0])),lo=-Math.abs(num(m[1]));
+  if(la<-56||la>-17||lo<-76||lo>-66){posErr="Esas coordenadas no caen en Chile. Revisa que la latitud vaya primero.";render();return}
+  pos={lat:+la.toFixed(5),lon:+lo.toFixed(5)};try{localStorage.setItem(PKEY,JSON.stringify(pos))}catch(e){}
+  render();
+}
+var gpsId=null, gpsInfo="", gpsLast=0;
+var gpsOK=!window.claude&&!!navigator.geolocation;
+function gpsStart(){
+  if(!gpsOK)return;gpsInfo="Buscando señal GPS…";render();
+  gpsId=navigator.geolocation.watchPosition(function(p){
+    var now=Date.now();
+    pos={lat:+p.coords.latitude.toFixed(5),lon:+p.coords.longitude.toFixed(5)};
+    gpsInfo="GPS activo · precisión ± "+Math.round(p.coords.accuracy)+" m";
+    try{localStorage.setItem(PKEY,JSON.stringify(pos))}catch(e){}
+    if(now-gpsLast>8000||!gpsLast){gpsLast=now;posErr="";render()}
+  },function(err){
+    gpsStop();posErr=err.code===1?"Permiso de ubicación denegado. Actívalo para este sitio en los ajustes del navegador.":"No se pudo obtener la ubicación. Intenta al aire libre o pega las coordenadas.";render();
+  },{enableHighAccuracy:true,maximumAge:15000,timeout:30000});
+}
+function gpsStop(){if(gpsId!=null)navigator.geolocation.clearWatch(gpsId);gpsId=null;gpsInfo="";gpsLast=0}
+app.addEventListener("keydown",function(e){
+  if(e.target.id==="pos-in"&&e.key==="Enter"){e.preventDefault();setPos();return}
+  var t=e.target;if((e.key==="Enter"||e.key===" ")&&t.getAttribute&&t.getAttribute("role")==="button"&&t.tagName!=="BUTTON"){e.preventDefault();t.dispatchEvent(new MouseEvent("click",{bubbles:true}))}
+});
+
+app.addEventListener("input",function(e){var t=e.target;
+  if(t.dataset&&t.dataset.k&&t.isContentEditable){setP(t.dataset.k,t.innerText.replace(/\n$/,""));markDirtyQuiet()}});
+function markDirtyQuiet(){if(!dirty){dirty=true;var bar=document.createElement("div");app.insertAdjacentHTML("beforeend",'<div class="savebar" role="region" aria-label="Cambios sin guardar"><span>Cambios sin guardar</span><button type="button" class="btn" data-act="discard" data-k="">Descartar</button><button type="button" class="btn pri" data-act="save" data-k="">Guardar y publicar</button><span class="msg" id="msg"></span></div>')}}
+app.addEventListener("change",function(e){var t=e.target;
+  if(t.dataset.date){setP(t.dataset.date,t.value);dirty=true;render()}
+  else if(t.dataset.sel){setP(t.dataset.sel,t.value);dirty=true;render()}});
+app.addEventListener("click",function(e){
+  var b=e.target.closest("[data-act]");if(!b)return;
+  var a=b.dataset.act,k=b.dataset.k;
+  if(a==="tick"){var it=getP(k);
+    if(canWrite){it.d=!it.d;dirty=true}else{local[k]=!isDone(k,it);try{localStorage.setItem(LKEY,JSON.stringify(local))}catch(x){}}
+    render();var nb=app.querySelector('[data-act="tick"][data-k="'+k+'"]');if(nb)nb.focus();return}
+  if(a==="pt"){sel=sel===+k?null:+k;render();var g=app.querySelector('g[data-act="pt"][data-k="'+k+'"]');if(g&&g.focus)g.focus({preventScroll:true});return}
+  if(a==="pos-set"){setPos();return}
+  if(a==="gps-on"){gpsStart();return}
+  if(a==="gps-off"){gpsStop();render();return}
+  if(a==="pos-clr"){pos=null;posErr="";try{localStorage.removeItem(PKEY)}catch(x){}render();return}
+  if(a==="save"){save();return}
+  if(a==="discard"){S=JSON.parse(ORIG);dirty=false;pendingDel=null;render();return}
+  if(a==="edit-on"){editing=true;render();return}
+  if(a==="edit-off"){editing=false;pendingDel=null;render();return}
+  if(a==="sec-del"||a==="blk-del"){var key=a+"|"+k;if(pendingDel!==key){pendingDel=key;render();return}pendingDel=null;arrDel(k)}
+  else if(a==="sec-up")arrMove(k,-1);else if(a==="sec-down")arrMove(k,1);
+  else if(a==="blk-up")arrMove(k,-1);else if(a==="blk-down")arrMove(k,1);
+  else if(a==="item-del")arrDel(k);
+  else if(a==="item-add")getP(k).push("Ítem nuevo");
+  else if(a==="pt-add")getP(k).push({n:"Nuevo punto",lat:"",lon:"",k:"end",ruta:"no",tags:""});
+  else if(a==="check-add")getP(k).push({t:"Ítem nuevo",d:false});
+  else if(a==="check-reset")getP(k).forEach(function(i){i.d=false});
+  else if(a==="row-add"){var tb=getP(k);tb.rows.push(tb.cols.map(function(){return""}))}
+  else if(a==="col-add"){var tc=getP(k);tc.cols.push("Nueva");tc.rows.forEach(function(r){r.push("")})}
+  else if(a==="col-del"){var td=getP(k);td.cols.pop();td.rows.forEach(function(r){r.pop()})}
+  else if(a==="tone"){var nt=getP(k);nt.tone=nt.tone==="warn"?"info":"warn"}
+  else if(a==="stop-add"){var p=k.split("."),i=+p.pop();getP(p.join(".")).splice(i+1,0,{n:"Nueva parada",s:"",k:"gravel"})}
+  else if(a==="blk-add"){var si=k.split(".")[1],sel=document.getElementById("add-"+si);getP(k).b.push(newBlock(sel.value))}
+  else if(a==="sec-add"){S.secciones.push({id:"s"+Date.now().toString(36),t:"Nueva sección",b:[newBlock("p")]})}
+  else return;
+  if(a.indexOf("del")<0)pendingDel=null;
+  dirty=true;render();
+});
+
+function buildDoc(){
+  var reset=(document.head.querySelector("style")||{}).textContent||"";
+  var link=document.querySelector('link[href*="fonts.googleapis.com"]');
+  var json=JSON.stringify(S).replace(/</g,"\\u003c");
+  return '<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>'+reset+"</style></head><body>"+
+    "<title>"+esc(document.title||"Carretera Austral en Land Rover")+"</title>\n"+(link?link.outerHTML+"\n":"")+
+    document.getElementById("app-css").outerHTML+'\n<div id="app"></div>\n<script type="application/json" id="guide-data">'+json+"<\/script>\n"+
+    document.getElementById("app-js").outerHTML+"</body></html>";
+}
+function save(){
+  if(busy||!artifactNs)return;busy=true;var prevEd=S.meta.editado;S.meta.editado=hoyISO();render();
+  artifactNs.publish(buildDoc()).then(function(){ /* la vista se recarga a la nueva versión */ },function(err){
+    busy=false;S.meta.editado=prevEd;var c=err&&err.code;render();var m=document.getElementById("msg");
+    if(c==="conflict"){if(m)m.textContent="Otra persona guardó antes; la página se recargará con su versión."}
+    else if(c==="not_writer"||c==="not_granted"){canWrite=false;editing=false;dirty=false;readOnlyNote="Vista de solo lectura: tus marcas en las checklists quedan guardadas sólo en este navegador.";render()}
+    else if(c==="rate_limited"){if(m)m.textContent="Demasiados guardados seguidos. Espera un minuto y vuelve a intentar."}
+    else if(m)m.textContent="No se pudo guardar ("+(c||"error")+"). Intenta de nuevo.";
+  });
+}
+window.addEventListener("beforeunload",function(e){if(dirty&&!busy){e.preventDefault();e.returnValue=""}});
+
+render();
+if(window.claude&&window.claude.use){
+  Promise.all([window.claude.use("artifact"),window.claude.use("user")]).then(function(r){
+    artifactNs=r[0];var u=r[1];
+    if(!artifactNs)return;
+    return (u?u.canEdit():Promise.resolve(true)).then(function(ok){canWrite=!!ok;render()});
+  }).catch(function(){});
+}
+})();
+</script>
+
+</body>
+</html>
