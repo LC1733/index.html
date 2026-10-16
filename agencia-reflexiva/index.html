@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agencia Reflexiva · Fundamento y Arquitectura</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#100e0b;
+  --bg-soft:#17140f;
+  --bg-card:#1c1812;
+  --ink:#ece4d4;
+  --ink-dim:#b3a991;
+  --ink-faint:#7c735f;
+  --rule:#2c261c;
+  --amber:#d9a44a;        /* registro ontología / biológico */
+  --amber-soft:#3a2f18;
+  --teal:#5fb6a7;          /* registro protocolo / ingeniería */
+  --teal-soft:#16302c;
+  --serif:"Newsreader",Georgia,serif;
+  --display:"Fraunces",Georgia,serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--serif);
+  font-size:18px;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+  background:
+    radial-gradient(1200px 600px at 80% -10%,rgba(217,164,74,.07),transparent 60%),
+    radial-gradient(900px 500px at -10% 110%,rgba(95,182,167,.06),transparent 60%);
+}
+.noise{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.035;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+.wrap{position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:0 28px}
+
+/* ---------- NAV ---------- */
+nav{position:sticky;top:0;z-index:40;backdrop-filter:blur(10px);
+  background:linear-gradient(180deg,rgba(16,14,11,.92),rgba(16,14,11,.7));
+  border-bottom:1px solid var(--rule)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:62px}
+.brand{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-dim)}
+.brand b{color:var(--amber);font-weight:500}
+.navlinks{display:flex;gap:6px;flex-wrap:wrap}
+.navlinks a{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-faint);text-decoration:none;padding:8px 12px;border-radius:999px;transition:.25s;border:1px solid transparent}
+.navlinks a:hover{color:var(--ink);border-color:var(--rule)}
+.navlinks a.on{color:var(--bg);background:var(--amber);border-color:var(--amber)}
+
+/* ---------- HERO ---------- */
+header.hero{padding:120px 0 90px;position:relative}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--teal);
+  display:inline-block;margin-bottom:30px;opacity:0;animation:rise .9s .1s forwards}
+.hero h1{font-family:var(--display);font-weight:500;font-size:clamp(42px,7.5vw,92px);line-height:.98;
+  letter-spacing:-.02em;max-width:14ch}
+.hero h1 .a{color:var(--amber);font-style:italic}
+.hero h1 .b{color:var(--teal);font-style:italic}
+.hero h1 span{display:block;opacity:0;animation:rise 1s forwards}
+.hero h1 span:nth-child(1){animation-delay:.18s}
+.hero h1 span:nth-child(2){animation-delay:.30s}
+.hero h1 span:nth-child(3){animation-delay:.42s}
+.hero .lede{font-family:var(--serif);font-size:21px;line-height:1.6;color:var(--ink-dim);
+  max-width:60ch;margin-top:38px;opacity:0;animation:rise 1s .58s forwards}
+.hero .lede em{color:var(--ink);font-style:italic}
+.loop{position:absolute;right:-40px;top:60px;width:min(40vw,360px);opacity:0;animation:fade 1.6s .8s forwards}
+@media(max-width:860px){.loop{display:none}}
+.loop path,.loop circle{fill:none;stroke-linecap:round}
+.dash{stroke-dasharray:6 14;animation:spin 60s linear infinite;transform-origin:center}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fade{to{opacity:.9}}
+
+/* ---------- SECTION SHELL ---------- */
+section{padding:80px 0;border-top:1px solid var(--rule);position:relative}
+.sec-tag{font-family:var(--mono);font-size:12px;letter-spacing:.28em;text-transform:uppercase;
+  display:flex;align-items:center;gap:14px;margin-bottom:26px}
+.sec-tag .num{color:var(--bg);width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
+  font-size:12px;font-weight:500}
+.sec-tag.amber .num{background:var(--amber)} .sec-tag.amber{color:var(--amber)}
+.sec-tag.teal  .num{background:var(--teal)}  .sec-tag.teal{color:var(--teal)}
+.sec-tag.mix   .num{background:linear-gradient(135deg,var(--amber),var(--teal))} .sec-tag.mix{color:var(--ink-dim)}
+.sec-title{font-family:var(--display);font-weight:500;font-size:clamp(30px,4.5vw,52px);line-height:1.05;
+  letter-spacing:-.015em;max-width:18ch;margin-bottom:14px}
+.sec-sub{font-family:var(--serif);font-style:italic;color:var(--ink-dim);font-size:20px;max-width:55ch;margin-bottom:14px}
+.reveal{opacity:0;transform:translateY(30px);transition:.8s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- ESSAY ---------- */
+.essay{max-width:760px;margin:48px auto 0}
+.essay .chapno{font-family:var(--mono);font-size:12px;letter-spacing:.3em;color:var(--amber);margin:60px 0 6px}
+.essay h3{font-family:var(--display);font-weight:500;font-size:28px;line-height:1.15;margin-bottom:22px;letter-spacing:-.01em}
+.essay h4{font-family:var(--display);font-weight:500;font-size:21px;margin:34px 0 12px;color:var(--ink)}
+.essay p{margin-bottom:20px;color:#ddd4c2}
+.essay p .lead-cap::first-letter{}
+.essay .exec{background:var(--bg-soft);border:1px solid var(--rule);border-left:3px solid var(--amber);
+  padding:28px 30px;border-radius:6px;margin:10px 0 20px}
+.essay .exec p:last-child{margin-bottom:0}
+.essay em{font-style:italic;color:#efe7d6}
+.essay strong{color:var(--amber);font-weight:500}
+.divider{display:flex;align-items:center;justify-content:center;gap:14px;margin:54px 0;color:var(--ink-faint)}
+.divider::before,.divider::after{content:"";height:1px;width:80px;background:var(--rule)}
+.fn{scroll-margin-top:80px}
+.fn-ref{font-family:var(--mono);font-size:.62em;color:var(--teal);text-decoration:none;vertical-align:super;
+  padding:0 2px;border-bottom:1px dotted var(--teal)}
+.footnote{background:var(--teal-soft);border:1px solid #214a44;border-radius:6px;padding:20px 24px;margin:26px 0;
+  font-size:16px;line-height:1.6;color:#cfe6e0}
+.footnote .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);
+  display:block;margin-bottom:8px}
+.footnote strong{color:#8fe0d0;font-weight:500}
+.essay .coda{font-family:var(--display);font-style:italic;font-size:24px;line-height:1.45;text-align:center;
+  color:var(--amber);margin:50px auto;max-width:30ch}
+.essay .byline{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ink-faint);margin-top:6px}
+
+/* ---------- CARDS ---------- */
+.group{margin-top:42px}
+.group-head{display:flex;align-items:baseline;gap:14px;margin:42px 0 18px}
+.group-head .gnum{font-family:var(--mono);color:var(--teal);font-size:13px;letter-spacing:.2em}
+.group-head h3{font-family:var(--display);font-weight:500;font-size:26px}
+.intro-card{background:linear-gradient(160deg,var(--bg-card),var(--bg-soft));border:1px solid var(--rule);
+  border-radius:10px;padding:30px 32px;margin-top:10px}
+.intro-card h3{font-family:var(--display);font-weight:500;font-size:24px;margin-bottom:14px;color:var(--ink)}
+.intro-card p{color:var(--ink-dim);margin-bottom:14px}
+.intro-card .tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.tag{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ink-dim);
+  border:1px solid var(--rule);border-radius:999px;padding:5px 11px;background:rgba(255,255,255,.015)}
+details.card{border:1px solid var(--rule);border-radius:10px;margin-bottom:12px;overflow:hidden;
+  background:var(--bg-card);transition:border-color .3s}
+details.card[open]{border-color:#3a3325}
+details.card.correction{border-color:var(--teal-soft);background:linear-gradient(180deg,rgba(95,182,167,.05),var(--bg-card))}
+details.card.correction[open]{border-color:#2f5a52}
+summary{list-style:none;cursor:pointer;padding:20px 24px;display:flex;align-items:center;gap:14px;
+  font-family:var(--display);font-weight:500;font-size:20px;color:var(--ink);user-select:none}
+summary::-webkit-details-marker{display:none}
+summary .ic{font-size:20px;line-height:1}
+summary .plus{margin-left:auto;font-family:var(--mono);color:var(--ink-faint);font-size:22px;transition:.3s;font-weight:400}
+details[open] summary .plus{transform:rotate(45deg);color:var(--amber)}
+details.card.correction[open] summary .plus{color:var(--teal)}
+.card-body{padding:0 24px 24px;color:#d4cab6;font-size:17px}
+.card-body p{margin-bottom:14px}
+.card-body strong{color:var(--amber);font-weight:500}
+details.card.correction .card-body strong{color:#8fe0d0}
+.card-body ul{list-style:none;margin:12px 0}
+.card-body li{padding-left:24px;position:relative;margin-bottom:10px}
+.card-body li::before{content:"›";position:absolute;left:4px;color:var(--teal);font-family:var(--mono)}
+.card-body .arrow{color:var(--teal);font-style:italic}
+.card-body .minitags{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px dashed var(--rule)}
+.corr-badge{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);
+  background:var(--teal-soft);border:1px solid #2f5a52;border-radius:4px;padding:3px 8px;margin-left:6px}
+
+/* roadmap phases */
+.roadmap{counter-reset:phase;margin-top:18px}
+.phase{display:flex;gap:18px;align-items:flex-start;padding:18px 0;border-bottom:1px solid var(--rule)}
+.phase:last-child{border-bottom:none}
+.phase .pn{counter-increment:phase;flex:0 0 44px;height:44px;border-radius:50%;border:1px solid var(--teal);
+  color:var(--teal);font-family:var(--mono);display:grid;place-items:center;font-size:16px}
+.phase .pn::before{content:counter(phase)}
+.phase h4{font-family:var(--display);font-weight:500;font-size:19px;color:var(--ink);margin-bottom:4px}
+.phase p{color:var(--ink-dim);font-size:16px}
+
+/* ---------- CROSSWALK ---------- */
+.cw-intro{max-width:62ch;color:var(--ink-dim);margin-bottom:34px}
+.cw-intro strong{color:var(--ink)}
+.crosswalk{display:grid;grid-template-columns:1fr 64px 1fr;gap:0;align-items:stretch;margin-top:10px}
+@media(max-width:780px){.crosswalk{grid-template-columns:1fr;gap:14px}.cw-mid{display:none}}
+.cw-col h5{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:14px}
+.cw-col.ops h5{color:var(--amber)} .cw-col.phs h5{color:var(--teal)}
+.cw-item{border:1px solid var(--rule);border-radius:8px;padding:14px 16px;margin-bottom:10px;cursor:pointer;
+  background:var(--bg-card);transition:.28s;position:relative}
+.cw-item .t{font-family:var(--display);font-weight:500;font-size:16px;color:var(--ink);line-height:1.3}
+.cw-item .d{font-size:13.5px;color:var(--ink-faint);margin-top:4px;font-family:var(--serif)}
+.cw-col.ops .cw-item.active{border-color:var(--amber);background:rgba(217,164,74,.09);box-shadow:0 0 0 1px var(--amber)}
+.cw-col.phs .cw-item.linked{border-color:var(--teal);background:rgba(95,182,167,.10);box-shadow:0 0 0 1px var(--teal)}
+.cw-item .note{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;color:var(--teal);margin-top:8px;
+  display:none}
+.cw-item.linked .note{display:block}
+.cw-mid{position:relative}
+.cw-mid svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.cw-hint{font-family:var(--mono);font-size:11px;color:var(--ink-faint);margin-top:18px;letter-spacing:.04em}
+.cw-hint b{color:var(--amber)}
+/* asymmetry callout (mejora 2) */
+.cw-split{display:flex;gap:16px;align-items:flex-start;margin-top:26px;padding:20px 22px;border-radius:10px;
+  border:1px solid var(--rule);border-left:3px solid;border-image:linear-gradient(var(--amber),var(--teal)) 1;
+  background:linear-gradient(100deg,rgba(217,164,74,.05),rgba(95,182,167,.05))}
+.cw-split .sb{font-family:var(--display);font-size:30px;line-height:1;font-weight:500;color:var(--ink-dim);
+  flex:0 0 auto;margin-top:2px}
+.cw-split .sb .n1{color:var(--amber)} .cw-split .sb .n2{color:var(--teal)}
+.cw-split p{font-size:15.5px;color:var(--ink-dim);line-height:1.6}
+.cw-split strong{color:var(--ink);font-weight:500}
+.cw-split em{color:var(--amber);font-style:italic}
+.cw-split .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);
+  display:block;margin-bottom:6px}
+/* "qué no afirma" panel (mejora 1) — registro neutro, grado cero */
+.limits{margin-top:48px;border:1px solid #2a2a2a;border-radius:12px;background:#121212;overflow:hidden}
+.limits .lhead{padding:26px 30px 20px;border-bottom:1px solid #242424}
+.limits .leyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:#8a8a8a;
+  display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.limits .leyebrow::before{content:"";width:22px;height:1px;background:#8a8a8a}
+.limits h3{font-family:var(--display);font-weight:500;font-size:26px;color:#dcdcdc;letter-spacing:-.01em}
+.limits .lhead p{font-size:15.5px;color:#9a9a9a;margin-top:10px;max-width:64ch;font-family:var(--serif)}
+.limits .lgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:#242424}
+@media(max-width:720px){.limits .lgrid{grid-template-columns:1fr}}
+.limits .lcell{background:#121212;padding:22px 26px}
+.limits .lcell .lk{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#777;
+  margin-bottom:9px}
+.limits .lcell h4{font-family:var(--display);font-weight:500;font-size:18px;color:#d2d2d2;margin-bottom:7px;line-height:1.25}
+.limits .lcell p{font-size:14.5px;color:#9a9a9a;line-height:1.55}
+.limits .lcell .inf{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:#6f8f88;
+  border:1px solid #2f4a45;border-radius:4px;padding:2px 7px;display:inline-block;margin-top:10px}
+.limits .lfoot{padding:20px 30px;border-top:1px solid #242424;font-family:var(--serif);font-style:italic;
+  font-size:16px;color:#b5b5b5;line-height:1.55}
+.limits .lfoot b{color:#dcdcdc;font-weight:500;font-style:normal}
+/* door to V∞ — entornada, no abierta (mejora 7, dejada para después) */
+
+/* ---------- SYNTH STRIP ---------- */
+.synth{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);
+  border-radius:10px;overflow:hidden;margin-top:40px}
+@media(max-width:780px){.synth{grid-template-columns:1fr}}
+.synth div{background:var(--bg-card);padding:26px 24px}
+.synth .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px}
+.synth .s1 .lbl{color:var(--amber)} .synth .s2 .lbl{color:var(--teal)} .synth .s3 .lbl{color:var(--ink-dim)}
+.synth h4{font-family:var(--display);font-weight:500;font-size:19px;margin-bottom:8px;color:var(--ink)}
+.synth p{font-size:15px;color:var(--ink-dim);line-height:1.55}
+
+/* ---------- FOOTER ---------- */
+footer{border-top:1px solid var(--rule);padding:48px 0 60px;margin-top:30px}
+.foot-meta{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);
+  text-align:center;line-height:1.9}
+.copyright{font-family:var(--mono);font-size:11px;color:var(--ink-faint);text-align:center;margin-top:22px;
+  line-height:1.8;max-width:70ch;margin-left:auto;margin-right:auto;letter-spacing:.02em}
+.copyright b{color:var(--ink-dim);font-weight:500}
+</style>
+</head>
+<body>
+<div class="noise"></div>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">Agencia&nbsp;Reflexiva · <b>Díptico</b></div>
+    <div class="navlinks">
+      <a href="#fundamento" class="nl">I · Fundamento</a>
+      <a href="#arquitectura" class="nl">II · Arquitectura</a>
+      <a href="#crosswalk" class="nl">III · Crosswalk</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <svg class="loop" viewBox="0 0 200 200" aria-hidden="true">
+      <circle class="dash" cx="100" cy="100" r="86" stroke="var(--amber)" stroke-width="1"/>
+      <circle cx="100" cy="100" r="62" stroke="var(--teal)" stroke-width="1" opacity=".5"/>
+      <path d="M100 14 C150 30 170 130 100 138 C40 145 55 70 100 70 C130 70 132 110 100 110"
+            stroke="var(--amber)" stroke-width="1.4" opacity=".8"/>
+      <circle cx="100" cy="110" r="3" fill="var(--teal)"/>
+    </svg>
+    <span class="kicker">Ensayo + Arquitectura operativa · Un solo corpus</span>
+    <h1>
+      <span>La libertad como</span>
+      <span class="a">determinación</span>
+      <span>reflexivamente <span class="b">reorganizada</span></span>
+    </h1>
+    <p class="lede">Dos piezas, un mismo invariante. El ensayo responde <em>qué es la agencia y por qué es real</em>; la arquitectura responde <em>cómo se cultiva</em>. El crosswalk muestra que son la misma estructura descrita en dos niveles: la ontología de un sistema que se convierte parcialmente en causa de sí mismo, y la ingeniería de control que la pone en práctica.</p>
+  </div>
+</header>
+
+<!-- ============ I · FUNDAMENTO ============ -->
+<section id="fundamento">
+  <div class="wrap">
+    <div class="sec-tag amber reveal"><span class="num">I</span> Fundamento · Ontología</div>
+    <h2 class="sec-title reveal">Más Allá del Determinismo y el Azar</h2>
+    <p class="sec-sub reveal">Hacia una teoría de la agencia reflexiva como autoorganización causal</p>
+    <p class="byline reveal" style="font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-faint)">Ensayo filosófico · Abril 2026</p>
+
+    <article class="essay">
+
+      <div class="exec reveal">
+        <p>El debate milenario entre determinismo y libre albedrío descansa sobre un error categorial. Plantea una falsa dicotomía: o todo está causalmente fijado —y la libertad es ilusión—, o existe el azar —y eso constituye libertad—. Ambas opciones son insostenibles. La primera confunde determinación ontológica con predictibilidad epistemológica. La segunda confunde aleatoriedad con agencia.</p>
+        <p>Este trabajo propone una tercera vía: la libertad no es ausencia de causalidad ni presencia de azar, sino la capacidad emergente de un sistema reflexivo para participar conscientemente en la reorganización de las causas que lo constituyen. La llamamos <strong>agencia reflexiva</strong>: un fenómeno real, biológicamente anclado, filosóficamente coherente y empíricamente verificable.</p>
+      </div>
+
+      <div class="chapno reveal">I</div>
+      <h3 class="reveal">Introducción: el laberinto de los falsos opuestos</h3>
+      <p class="reveal">Imagina una moneda girando en el aire. Un determinista clásico dirá: si conociéramos cada variable —el ángulo del lanzamiento, la densidad del aire, las corrientes atmosféricas hasta el otro lado del planeta— podríamos predecir con exactitud absoluta si caerá cara o cruz. Un indeterminista cuántico replicará: las fluctuaciones subatómicas hacen que tal predicción sea imposible en principio. Y ambos llegarán al mismo lugar: discutir si el ser humano que lanzó la moneda decidió libremente hacerlo. Aquí comienza el laberinto.</p>
+      <p class="reveal">El debate ofrece dos puertas. Detrás de la primera: todo está determinado, la libertad es ilusión, somos espectadores de un guion cósmico. Detrás de la segunda: existen indeterminismos genuinos, hay azar real, y de ese azar surge la libertad. Ambas puertas conducen al mismo precipicio.</p>
+      <p class="reveal">La tesis es radical en su simplicidad: <em>el debate clásico es falso en sus términos</em>. No porque una postura sea correcta y la otra equivocada, sino porque ambas comparten supuestos defectuosos sobre lo que significan <em>determinación</em>, <em>predictibilidad</em>, <em>azar</em> y <em>libertad</em>. Cuando esos supuestos se examinan, el dilema se disuelve. La libertad humana no es ni un milagro metafísico que escapa de la física, ni una ilusión que la física disuelve.</p>
+
+      <div class="divider reveal">— — —</div>
+
+      <div class="chapno reveal">II</div>
+      <h3 class="reveal">Primera ruptura: determinación ontológica no es predictibilidad epistemológica</h3>
+      <h4 class="reveal">2.1 · La falacia del demonio de Laplace</h4>
+      <p class="reveal">En 1814 Laplace formuló una imagen poderosa: un intelecto que conociera todas las fuerzas de la naturaleza y la posición de cada elemento no tendría incertidumbre alguna; futuro y pasado estarían igualmente presentes ante sus ojos. Ahí radica el primer error. El razonamiento contiene una equivalencia tácita —que estar causalmente determinado equivale a ser cognosciblemente predecible— y esa equivalencia es falsa.</p>
+      <p class="reveal">La <strong>determinación</strong> es una propiedad ontológica: cómo opera el universo, la trama causal que conecta los eventos. La <strong>predictibilidad</strong> es una propiedad epistemológica: lo que un sistema cognoscente puede saber, calcular o anticipar. Confundirlas es como confundir la existencia de una montaña con la posibilidad de cartografiarla. Un sistema puede estar completamente determinado y ser radicalmente impredecible: el clima obedece ecuaciones deterministas (Navier-Stokes), pero su sensibilidad extrema a las condiciones iniciales vuelve inútil cualquier predicción más allá de dos semanas.</p>
+      <h4 class="reveal">2.2 · El problema del observador interno</h4>
+      <p class="reveal">Hay una grieta más profunda. Cualquier predictor que pretenda anticipar el futuro del universo está, él mismo, dentro del universo. Un predictor perfecto <em>L</em>, para predecir el estado futuro completo, debe predecir también su propio estado —incluido el estado de sus cálculos—. Pero esos cálculos son parte del futuro que intenta predecir; para predecirlos debe ya haberlos realizado, y así indefinidamente. No es una limitación práctica sino una imposibilidad lógica, <strong>análoga</strong><a href="#fn-godel" class="fn-ref">1</a> a las paradojas que Gödel encontró en los sistemas formales y a las que Turing identificó en el problema de la parada. No existe ni puede existir un demonio de Laplace interno al universo; uno externo es ficción metafísica sin anclaje físico.</p>
+      <h4 class="reveal">2.3 · El problema de la reacción reflexiva</h4>
+      <p class="reveal">Supongamos que se logra predecir la conducta de un agente: «decidirá A en t=12:00». Si nunca conoce la predicción, podría cumplirse. Pero el agente no es pasivo: si conoce la predicción, esta se convierte en un nuevo dato causal que altera el sistema que se intentaba predecir. Puede entonces decidir B para refutarla. Anticipar esa reacción exige una predicción ampliada que también puede ser conocida y reaccionada. La regresión es infinita. La única salida —un escenario donde el agente no pueda reaccionar— equivale a anular su agencia para predecirla, lo que vacía la predicción de todo interés filosófico.</p>
+      <h4 class="reveal">2.4 · Consecuencia</h4>
+      <p class="reveal">El universo puede estar determinado y ser inherentemente impredecible para cualquier observador situado. No hay lugar lógico para un predictor total interno. Y la predicción de agentes reflexivos es imposible en principio cuando pueden conocer la predicción. El demonio de Laplace no es una posibilidad técnica aún no alcanzada: es una imposibilidad lógica. Con él cae la versión fuerte del determinismo predictivo. Pero aún no hemos hablado de libertad.</p>
+
+      <div class="divider reveal">— — —</div>
+
+      <div class="chapno reveal">III</div>
+      <h3 class="reveal">Segunda ruptura: indeterminismo cuántico no es libertad</h3>
+      <h4 class="reveal">3.1 · El espejismo cuántico</h4>
+      <p class="reveal">Cuando el determinismo predictivo encuentra dificultades, muchos se refugian en la mecánica cuántica: la física habría demostrado que el universo no es determinista en su nivel fundamental, luego hay espacio para la libertad. El argumento es seductor pero confuso. Primero, el indeterminismo cuántico opera en una escala donde sus efectos rara vez se propagan al nivel macroscópico de las decisiones: el cerebro es un sistema cálido y húmedo donde la decoherencia ocurre rápidamente. Pero el problema más hondo es conceptual.</p>
+      <h4 class="reveal">3.2 · El azar no es agencia</h4>
+      <p class="reveal">Supongamos que cierta decisión fuera causada por una fluctuación cuántica genuinamente aleatoria. ¿En qué sentido sería libre? Una decisión causada por azar no es propiedad del agente: es un acontecimiento que ocurre <em>en</em> él, pero no <em>por</em> él. Si giro a la izquierda porque un electrón colapsó al azar en mi corteza prefrontal, esa elección no me pertenece más que un estornudo. Es arbitraria, no autónoma. Aquí la distinción crucial: <strong>la libertad no es la ausencia de causa, es la posesión de la causa.</strong> Un acto libre es aquel cuya causa pertenece al agente —surge de su estructura, sus razones, sus deliberaciones—. El indeterminismo no salva la libertad: la hace imposible.</p>
+
+      <div class="divider reveal">— — —</div>
+
+      <div class="chapno reveal">IV</div>
+      <h3 class="reveal">Propuesta positiva: la agencia reflexiva como autoorganización causal</h3>
+      <h4 class="reveal">4.1 · Redefinir la libertad</h4>
+      <p class="reveal">Hay que abandonar una definición ingenua: la libertad como el poder de haber hecho otra cosa en circunstancias <em>idénticas</em>. Si todo fuera verdaderamente idéntico —incluidas las disposiciones internas del agente—, decir que pudo elegir distinto implica que la elección no se sigue de nada en particular. Eso es azar, no libertad. Proponemos: <strong>la libertad es la capacidad de un sistema para actuar de acuerdo con razones internalizadas, tras deliberación, en ausencia de coerción externa dominante, y con la posibilidad de modificar reflexivamente sus propios patrones causales.</strong></p>
+      <h4 class="reveal">4.2 · El cerebro no es una máquina trivial</h4>
+      <p class="reveal">¿No es todo reducible a química y física? El verdadero adversario no es el determinista ni el libertario, sino el <em>reduccionista ingenuo</em>: quien cree que explicar el nivel bajo (átomos, neuronas) elimina los fenómenos del nivel alto (personas, decisiones). Es como explicar una guerra describiendo el movimiento de los átomos en los soldados: técnicamente todos se mueven, pero «guerra» no opera a esa escala. Se pierde lo que se intenta explicar.</p>
+      <h4 class="reveal">4.3 · La realidad de los niveles emergentes</h4>
+      <p class="reveal">Un huracán es real: hecho de moléculas, pero no se explica describiendo cada una. Una empresa es real: tiene solvencia y reputación irreducibles a sus empleados. La agencia es el patrón causal de alto nivel que constituye a un organismo cognitivo con historia, lenguaje, memoria y reflexión. La ciencia contemporánea está llena de <strong>causalidad descendente</strong>, donde patrones de alto nivel restringen y modulan procesos de bajo nivel. No es dualismo: es reconocer que el universo opera en múltiples niveles, todos físicos, todos reales.<a href="#fn-kim" class="fn-ref">2</a></p>
+
+      <div class="footnote reveal" id="fn-kim">
+        <span class="lbl">Nota 2 · El reto pendiente que esta posición debe afrontar</span>
+        <p style="margin-bottom:0">La objeción más seria a la causalidad descendente es el <strong>argumento de exclusión causal</strong> de Jaegwon Kim: si todo efecto físico tiene ya una causa física suficiente en el nivel bajo, el nivel alto quedaría causalmente «desempleado», meramente superveniente. Esta propuesta no pretende zanjar a Kim, sino situar el punto exacto de tensión: o bien la causalidad de alto nivel es genuina (y la exclusión falla porque los niveles no compiten por el mismo «trabajo» causal), o bien se reduce a una forma de hablar. Sostenemos lo primero —los patrones de alto nivel son reales porque hacen diferencia contrafáctica—, y reconocemos que defenderlo plenamente exige una teoría de la emergencia que no se da aquí por concluida.</p>
+      </div>
+
+      <h4 class="reveal">4.4 · El núcleo: auto-causalidad reflexiva</h4>
+      <p class="reveal">La libertad humana es <strong>la capacidad de un sistema cognitivo para convertirse parcialmente en causa de sí mismo</strong>. Ocurre cuando un sistema ejecuta cuatro operaciones: <em>observar</em> sus propios impulsos; <em>inhibir</em> la respuesta inmediata (la corteza prefrontal modula y suprime respuestas automáticas); <em>evaluar</em> razones y proyectar futuros alternativos; y <em>reorganizar</em> los propios patrones de conducta mediante práctica, hábito y reflexión. No es magia: es una función biológica de alto nivel, comparable a la memoria o el lenguaje. Se desarrolla, se ejercita, se daña, se reconstruye. <em>Estas cuatro operaciones son la bisagra de este díptico: en el movimiento III se mapean, una a una, sobre el protocolo operativo.</em></p>
+
+      <div class="divider reveal">— — —</div>
+
+      <div class="chapno reveal">V</div>
+      <h3 class="reveal">Neurociencia y agencia: lectura correcta de Libet</h3>
+      <p class="reveal">En 1983 Libet pareció mostrar algo perturbador: la actividad cerebral preparatoria precedía a la decisión consciente de mover un dedo en ~350 ms. Muchos lo leyeron como prueba de que la conciencia es un mero espectador. La lectura es apresurada. Lo que Libet mostró fue un <em>potencial de preparación motora</em> previo a la conciencia —y un potencial de preparación no es una decisión tomada—. El propio Libet identificó la capacidad de <strong>veto consciente</strong>: el sujeto podía detener la acción ya iniciada. Schultze-Kraft et al. (2016) lo confirmaron experimentalmente, mostrando un «punto de no retorno» hasta el cual la interrupción es posible. Leído bien, Libet no refuta la libertad: la describe en su forma realista —no la capacidad de iniciar conducta desde un vacío causal, sino la de filtrar, redirigir y reorganizar impulsos que surgen de la propia historia biográfica—.</p>
+
+      <div class="divider reveal">— — —</div>
+
+      <div class="chapno reveal">VI</div>
+      <h3 class="reveal">Disolución de las paradojas</h3>
+      <h4 class="reveal">6.1 · Sobre la «ilusión» del libre albedrío</h4>
+      <p class="reveal">La crítica popular —nos sentimos libres porque ignoramos las causas reales— acierta y yerra a la vez. Acierta en que la libertad como <em>independencia causal absoluta</em> es ilusoria. Yerra al concluir que toda libertad lo es. Es análogo al color: el rojo como propiedad intrínseca es, en cierto sentido, ilusión —los objetos solo tienen disposiciones a reflejar longitudes de onda—, pero la experiencia del rojo es real y estructura nuestra interacción con el mundo. La libertad como sustancia metafísica que escapa de la causalidad es ilusoria; la libertad como autoorganización reflexiva de un sistema biológico complejo es real.</p>
+      <h4 class="reveal">6.2 · Sobre la determinación total</h4>
+      <p class="reveal">¿No está la agencia misma determinada por causas previas? Sí. Y eso no la debilita; la sostiene. La tesis no requiere que la agencia surja desde fuera de la cadena causal, sino algo más modesto y más fuerte: que sea <em>un eslabón causal real, con propiedades genuinas</em>. La pregunta correcta no es «¿está determinada la agencia?» (lo está), sino «¿existe la agencia como nivel causal real?» (existe).</p>
+      <h4 class="reveal">6.3 · Sobre la responsabilidad moral</h4>
+      <p class="reveal">La responsabilidad no es absoluta sino gradual, dependiente del estado de las capacidades reflexivas. Quien está en pleno uso de su auto-observación, deliberación e inhibición es responsable en alto grado; quien las tiene comprometidas por enfermedad, manipulación severa o adicción profunda, en menor grado. No es relativismo: es realismo psicológico. La responsabilidad es relacional, gradual y real.</p>
+      <h4 class="reveal">6.4 · La autorreferencia como sustrato de la libertad</h4>
+      <p class="reveal">El bucle reflexivo que impedía la predicción total es, precisamente, el sustrato lógico de la agencia. <strong>Un sistema capaz de modelarse a sí mismo es un sistema capaz de modificarse a sí mismo.</strong> Donde la lógica formal encuentra paradojas, los sistemas biológicos encuentran agencia. La conciencia no es un escape del orden causal: es la torsión reflexiva del orden causal sobre sí mismo.</p>
+
+      <div class="divider reveal">— — —</div>
+
+      <div class="chapno reveal">VII</div>
+      <h3 class="reveal">Conclusión: la pregunta correcta</h3>
+      <p class="reveal">Disolvimos el determinismo predictivo (determinación ≠ predictibilidad; el observador interno; la imposibilidad de predecir agentes que conocen la predicción), rechazamos el indeterminismo cuántico como fuente de libertad (el azar no es agencia) y propusimos la libertad como agencia reflexiva. La pregunta tradicional —¿soy libre o estoy determinado?— resulta mal formulada. La correcta es:</p>
+      <p class="reveal" style="text-align:center"><em style="font-size:1.15em;color:var(--amber)">¿Qué grado de participación consciente tengo en la reorganización de las causas que me constituyen?</em></p>
+      <p class="reveal">Esta pregunta implica que la libertad se cultiva o se atrofia. Que ciertas prácticas —meditación, terapia, educación, conversación filosófica— amplían el espacio de auto-causalidad, y ciertas condiciones —adicción, trauma, manipulación— lo constriñen. La libertad humana es un logro biográfico y social, no una propiedad metafísica fija.</p>
+
+      <div class="coda reveal">No somos libres a pesar de las causas.<br>Somos libres en la medida en que nos convertimos,<br>parcialmente y siempre con esfuerzo,<br>en causa de nosotros mismos.</div>
+
+      <div class="footnote reveal" id="fn-godel" style="background:var(--bg-soft);border-color:var(--rule)">
+        <span class="lbl" style="color:var(--ink-dim)">Nota 1 · Sobre el uso de Gödel y Turing</span>
+        <p style="margin-bottom:0;color:var(--ink-dim)">La incompletitud de Gödel y el problema de la parada de Turing son resultados sobre <em>indecidibilidad formal</em>, no enunciados sobre un sistema físico que se predice a sí mismo. Aquí funcionan como <strong style="color:var(--ink)">analogía iluminadora</strong>, no como demostración: el argumento del observador interno se sostiene por sí mismo —por la autorreferencia del predictor situado—, y los teoremas le dan forma intuitiva sin prestarle su fuerza probatoria.</p>
+      </div>
+
+      <h4 class="reveal" style="margin-top:50px">Nota sobre el método</h4>
+      <p class="reveal">Esta propuesta se sitúa fuera de los dos campos tradicionales. No defiende el libre albedrío libertario (causalidad agente irreductible y físicamente sospechosa) ni el eliminativismo (que niega el fenómeno que pretende explicar), ni se reduce al compatibilismo clásico (que demasiadas veces redefine términos sin tocar el problema sustantivo). Se acerca, en espíritu, al emergentismo y al compatibilismo robusto contemporáneos, añadiendo lo que consideramos esencial: la centralidad de la <em>auto-causalidad reflexiva</em>. El método ha sido socrático: identificar supuestos ocultos, mostrar sus tensiones y abrir el espacio para una reformulación que respete a la vez la física, la fenomenología y la práctica humana de la responsabilidad. La meta no era ganar el debate, sino disolver sus términos.</p>
+      <p class="byline reveal">Luis Cartes Henríquez</p>
+    </article>
+  </div>
+</section>
+
+<!-- ============ II · ARQUITECTURA ============ -->
+<section id="arquitectura">
+  <div class="wrap">
+    <div class="sec-tag teal reveal"><span class="num">II</span> Arquitectura · Protocolo</div>
+    <h2 class="sec-title reveal">Arquitectura de la agencia interna</h2>
+    <p class="sec-sub reveal">De autómata reactivo a arquitecto de tu experiencia. Lectura intuitiva basada en neurociencia, teoría de control y psicología cognitiva.</p>
+
+    <div class="intro-card reveal">
+      <h3>🎯 El poder que no viola la física</h3>
+      <p>El «poder» del que hablamos no es mágico ni sobrenatural. Es la capacidad de un sistema consciente para ejercer agencia y modular su interacción con el entorno. No altera las leyes físicas —no flotarás ni doblarás cucharas— sino que optimiza el <strong style="color:var(--teal)">locus de control interno</strong>: creer que tus acciones determinan tus resultados, lo que activa la corteza prefrontal y reduce la reactividad de la amígdala. Tu cerebro no es un espejo pasivo del mundo, sino un modelo que construye activamente lo que percibes.</p>
+      <div class="tags"><span class="tag">teoría de control</span><span class="tag">neuroplasticidad</span><span class="tag">locus de control interno</span></div>
+    </div>
+
+    <!-- GROUP 1 -->
+    <div class="group reveal">
+      <div class="group-head"><span class="gnum">01</span><h3>🧠 Cognición recalibrada</h3></div>
+
+      <details class="card">
+        <summary><span class="ic">👁️</span> Percepción activa: no eres un espejo <span class="plus">+</span></summary>
+        <div class="card-body">
+          <p>La mayoría vive creyendo que percibe el mundo tal cual es. Pero la ciencia cognitiva actual —teoría predictiva, Friston— <strong>propone y modela</strong> que tu cerebro genera hipótesis sobre lo que hay ahí fuera y solo corrige los errores de predicción.</p>
+          <p class="arrow">➡️ Recalibrar la percepción significa entender que tú co-construyes tu realidad con tus expectativas, tu atención y tu experiencia previa.</p>
+          <div class="minitags"><span class="tag">inferencia bayesiana</span><span class="tag">minimización de error de predicción</span></div>
+        </div>
+      </details>
+
+      <details class="card correction">
+        <summary><span class="ic">🧪</span> Estatus de la teoría predictiva <span class="corr-badge">precisión añadida</span><span class="plus">+</span></summary>
+        <div class="card-body">
+          <p>El cerebro como <em>modelo predictivo</em> (predictive coding, principio de energía libre de Friston) es un marco <strong>influyente y fértil, pero aún en debate</strong>, no un hecho cerrado.</p>
+          <p class="arrow">➡️ Por eso conviene el verbo correcto: la teoría <strong>propone y modela</strong> que el cerebro genera hipótesis y corrige errores — no que lo haya <em>demostrado</em> en sentido fuerte.</p>
+          <ul>
+            <li>La evidencia de codificación predictiva en percepción es robusta.</li>
+            <li>La versión ambiciosa —energía libre como ley general del cerebro— es criticada por su difícil falsabilidad: explica casi todo, y eso es a la vez su fuerza y su debilidad epistémica.</li>
+          </ul>
+          <p class="arrow">🔁 Tesis operativa intacta: tú co-construyes lo que percibes. El matiz es de <em>grado de certeza</em>, no de dirección.</p>
+          <div class="minitags"><span class="tag">Rao &amp; Ballard</span><span class="tag">Clark</span><span class="tag">Hohwy</span></div>
+        </div>
+      </details>
+
+      <details class="card">
+        <summary><span class="ic">📊</span> Problemas = probabilidades dinámicas <span class="plus">+</span></summary>
+        <div class="card-body">
+          <p>Si la percepción es inferencia, un «problema» deja de ser un muro fijo y pasa a ser una <strong>distribución de probabilidades</strong> que se actualiza con cada dato nuevo. El cerebro no resuelve certezas: gestiona apuestas y ajusta sus márgenes de error.</p>
+          <p class="arrow">➡️ Reencuadrar un obstáculo como variable estimable —no como destino— devuelve grados de libertad a la acción.</p>
+          <div class="minitags"><span class="tag">actualización bayesiana</span></div>
+        </div>
+      </details>
+
+      <details class="card">
+        <summary><span class="ic">🔄</span> Reencuadre = reprogramación neuroplástica <span class="plus">+</span></summary>
+        <div class="card-body">
+          <p>Reinterpretar deliberadamente un evento (cognitive reappraisal, Gross) no es solo «pensar en positivo»: al repetirse, modifica las rutas sinápticas que sostienen la respuesta automática. La interpretación practicada se consolida.</p>
+          <p class="arrow">➡️ El reencuadre sostenido reescribe, con el tiempo, el patrón por defecto.</p>
+          <div class="minitags"><span class="tag">reappraisal</span><span class="tag">neuroplasticidad</span></div>
+        </div>
+      </details>
+    </div>
+
+    <!-- GROUP 2 -->
+    <div class="group reveal">
+      <div class="group-head"><span class="gnum">02</span><h3>⚙️ Comportamiento y agencia</h3></div>
+
+      <details class="card">
+        <summary><span class="ic">🧠</span> De reacción límbica a respuesta prefrontal <span class="plus">+</span></summary>
+        <div class="card-body">
+          <p>Tu cerebro tiene dos grandes modos de operación:</p>
+          <ul>
+            <li><strong>Ruta rápida</strong> (estructuras subcorticales como la amígdala): respuestas ultrarrápidas, automáticas, de alta carga emocional.</li>
+            <li><strong>Ruta deliberativa</strong> (corteza prefrontal, dlPFC/vmPFC): planificación, inhibición, conducta orientada a metas.</li>
+          </ul>
+          <p>La propuesta es pasar de un comportamiento reactivo (estímulo → reacción automática) a uno proactivo (meta → plan → acción prefrontal).</p>
+          <p class="arrow">💡 Te insultan: la ruta rápida te haría gritar o huir; la deliberativa te permite pausar, evaluar y responder con intención —o ignorar estratégicamente—. Ese «pausar» es el veto de Libet del Movimiento I.</p>
+        </div>
+      </details>
+
+      <details class="card correction">
+        <summary><span class="ic">🧭</span> Nota de precisión: la metáfora límbico / prefrontal <span class="corr-badge">precisión añadida</span><span class="plus">+</span></summary>
+        <div class="card-body">
+          <p>La división «cerebro límbico emocional vs. corteza racional» es un <strong>atajo funcional, no un mapa anatómico</strong>. Procede del modelo del <em>cerebro triúno</em> (MacLean, años 60), hoy descartado por la neurociencia: el cerebro no se construyó por capas evolutivas superpuestas.</p>
+          <p class="arrow">➡️ Matices que importan:</p>
+          <ul>
+            <li>La amígdala <strong>no es «el centro del miedo»</strong>, sino un detector de saliencia y relevancia. Se activa ante lo emocionalmente significativo —positivo o negativo—, no solo ante la amenaza.</li>
+            <li>La corteza prefrontal y las estructuras subcorticales <strong>operan en bucle continuo</strong>, no como rivales. No hay un «tú racional» frenando a un «tú animal».</li>
+          </ul>
+          <p class="arrow">🔧 Usamos la dicotomía porque es útil para decidir <em>dónde intervenir</em>, no porque describa la arquitectura real. Conocer el límite del modelo es parte de la ingeniería honesta.</p>
+          <div class="minitags"><span class="tag">Barrett</span><span class="tag">LeDoux</span><span class="tag">Damasio</span><span class="tag">neurociencia afectiva</span></div>
+        </div>
+      </details>
+
+      <details class="card">
+        <summary><span class="ic">🧘</span> Regulación activa: mindfulness y sistema nervioso <span class="plus">+</span></summary>
+        <div class="card-body">
+          <p>No es espiritualidad new age: la atención plena tiene <strong>efectos medibles</strong> en la fisiología —reduce cortisol, aumenta el tono parasimpático (vagal) y disminuye la reactividad de la amígdala—.</p>
+          <p class="arrow">➡️ Regular el estado interno mejora la calidad de la decisión y la ejecución de acciones complejas. Eres el ingeniero de tu homeostasis.</p>
+          <p style="font-size:14px;color:var(--ink-faint)">Matiz honesto: los tamaños de efecto son reales pero modestos, y parte de la literatura enfrenta problemas de replicación. «Efectos medibles», sí; panacea, no.</p>
+        </div>
+      </details>
+
+      <details class="card">
+        <summary><span class="ic">🎮</span> Atribución causal interna vs. control externo <span class="plus">+</span></summary>
+        <div class="card-body">
+          <p>El lema estoico con respaldo científico: dirige tu energía a lo que puedes cambiar —tu modelo interno, tu atención, tus hábitos— y suelta lo que no puedes controlar —el clima, la bolsa, lo que otros piensan—.</p>
+          <p class="arrow">➡️ El locus de control interno correlaciona con mayor bienestar, menor ansiedad y mejor rendimiento. No es «echarse la culpa», sino asumir responsabilidad causal sobre la propia experiencia —y, como advierte el Movimiento I, calibrarla para no sobre-atribuirte lo genuinamente incontrolable—.</p>
+          <p class="arrow">🔧 La optimización del sistema cognitivo es la estrategia más eficiente: en lugar de reordenar el mundo, reordena tu mapa del mundo.</p>
+        </div>
+      </details>
+    </div>
+
+    <!-- GROUP 3 -->
+    <div class="group reveal">
+      <div class="group-head"><span class="gnum">03</span><h3>🧩 Síntesis: el mapa de ruta</h3></div>
+      <p style="color:var(--ink-dim);margin-bottom:6px">De autómata a arquitecto de tu experiencia — cinco fases del cambio:</p>
+      <div class="roadmap">
+        <div class="phase"><div class="pn"></div><div><h4>Conciencia metacognitiva</h4><p>Saber que tu cerebro construye realidad. El acto de modelarte ya es el primer eslabón de la auto-causalidad.</p></div></div>
+        <div class="phase"><div class="pn"></div><div><h4>Entrenamiento atencional</h4><p>Mindfulness para modular la respuesta fisiológica y abrir el espacio entre estímulo y reacción.</p></div></div>
+        <div class="phase"><div class="pn"></div><div><h4>Reencuadre deliberado</h4><p>Reprogramar las interpretaciones automáticas; evaluar razones y proyectar futuros alternativos.</p></div></div>
+        <div class="phase"><div class="pn"></div><div><h4>Acción prefrontal</h4><p>Responder con intención, no reaccionar. Inhibir la respuesta inmediata: el veto consciente en acción.</p></div></div>
+        <div class="phase"><div class="pn"></div><div><h4>Atribución interna</h4><p>Enfocarte en mejorar tu modelo, no en controlar lo incontrolable. Reorganizar los propios patrones.</p></div></div>
+      </div>
+      <p style="color:var(--ink-faint);font-size:15px;margin-top:24px;font-style:italic">Lo que NO es este enfoque: negación del mundo externo, culpabilidad tóxica ni omnipotencia. Es ingeniería de control aplicada a tu sistema nervioso. El resultado: menos arrastre emocional, más capacidad de elegir tu respuesta y una sensación de agencia realista pero poderosa.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ III · CROSSWALK ============ -->
+<section id="crosswalk">
+  <div class="wrap">
+    <div class="sec-tag mix reveal"><span class="num">III</span> Crosswalk · La bisagra</div>
+    <h2 class="sec-title reveal">Una misma estructura, dos niveles</h2>
+    <p class="cw-intro reveal">Las <strong>cuatro operaciones</strong> que el ensayo <em>define</em> como núcleo de la auto-causalidad reflexiva (§4.4) son, casi uno a uno, las <strong>cinco fases</strong> que la arquitectura <em>operacionaliza</em>. La ontología hace la pregunta; el protocolo entrega la ingeniería de la respuesta. Toca cualquier tarjeta —operación <em>o</em> fase—: el vínculo se enciende en ambas direcciones, como el bucle mismo.</p>
+
+    <div class="crosswalk reveal">
+      <div class="cw-col ops">
+        <h5>↑ Ontología · Operaciones (Ensayo §4.4)</h5>
+        <div class="cw-item" id="op0" data-links="p1 p2"><div class="t">Observar los propios impulsos</div><div class="d">Auto-observación del estado interno</div></div>
+        <div class="cw-item" id="op1" data-links="p4"><div class="t">Inhibir la respuesta inmediata</div><div class="d">Modulación prefrontal · veto consciente</div></div>
+        <div class="cw-item" id="op2" data-links="p3"><div class="t">Evaluar razones y proyectar futuros</div><div class="d">Deliberación contrafáctica</div></div>
+        <div class="cw-item" id="op3" data-links="p5"><div class="t">Reorganizar los propios patrones</div><div class="d">Reconsolidación por hábito y práctica</div></div>
+      </div>
+
+      <div class="cw-mid">
+        <svg viewBox="0 0 64 400" preserveAspectRatio="none">
+          <path d="M0 40 C40 40 24 60 64 60" stroke="var(--rule)" fill="none" stroke-width="1.2"/>
+        </svg>
+      </div>
+
+      <div class="cw-col phs">
+        <h5>↓ Protocolo · Fases (Arquitectura §3)</h5>
+        <div class="cw-item" id="p1" data-op="op0"><div class="t">1 · Conciencia metacognitiva</div><div class="d">Saber que el cerebro construye realidad</div><div class="note">← observar impulsos</div></div>
+        <div class="cw-item" id="p2" data-op="op0"><div class="t">2 · Entrenamiento atencional</div><div class="d">Mindfulness · modular fisiología</div><div class="note">← observar impulsos</div></div>
+        <div class="cw-item" id="p3" data-op="op2"><div class="t">3 · Reencuadre deliberado</div><div class="d">Reprogramar interpretaciones</div><div class="note">← evaluar razones / proyectar</div></div>
+        <div class="cw-item" id="p4" data-op="op1"><div class="t">4 · Acción prefrontal</div><div class="d">Responder con intención · es el veto de Libet (§V)</div><div class="note">← inhibir respuesta inmediata</div></div>
+        <div class="cw-item" id="p5" data-op="op3"><div class="t">5 · Atribución interna</div><div class="d">Mejorar el modelo · neuroplasticidad</div><div class="note">← reorganizar patrones</div></div>
+      </div>
+    </div>
+
+    <div class="cw-split reveal">
+      <div class="sb"><span class="n1">4</span>→<span class="n2">5</span></div>
+      <div>
+        <span class="lbl">La asimetría no es una costura — es un hallazgo</span>
+        <p>Cuatro operaciones ontológicas, cinco fases operativas: el número no cuadra, y eso <strong>dice algo</strong>. Una sola operación —<em>observar los propios impulsos</em>— se desdobla en dos fases entrenables porque <strong>saber que modelas</strong> (fase 1, metacognición) no basta: hace falta la <strong>estabilidad atencional</strong> (fase 2, mindfulness) para efectivamente mirar. Ahí la ontología roza la ingeniería y descubre que una operación conceptual exige dos capacidades distintas. El mapa no solo alinea cajas; marca el punto donde el concepto se parte en dos para poder practicarse.</p>
+      </div>
+    </div>
+    <p class="cw-hint reveal">El cierre del ensayo —<b>«¿qué grado de participación consciente tengo en la reorganización de las causas que me constituyen?»</b>— queda respondido, en forma de protocolo, por estas cinco fases.</p>
+
+    <div class="synth reveal">
+      <div class="s1"><div class="lbl">Por qué se blindan</div><h4>El ensayo gana retorno</h4><p>Su debilidad era la abstracción. El protocolo le da una salida verificable: «no es solo teoría — se entrena así, en cinco fases».</p></div>
+      <div class="s2"><div class="lbl">mutuamente</div><h4>La arquitectura gana fundamento</h4><p>Su riesgo era parecer autoayuda. Anclada a una ontología rigurosa de la libertad, deja de ser «tips» y pasa a ser teoría aplicada de la agencia.</p></div>
+      <div class="s3"><div class="lbl">el resultado</div><h4>Un corpus, no dos piezas</h4><p>Teoría ↔ práctica articuladas por un único invariante: la auto-causalidad reflexiva. El mismo bucle que se modela a sí mismo y, por ello, puede modificarse.</p></div>
+    </div>
+
+    <div class="limits reveal">
+      <div class="lhead">
+        <span class="leyebrow">Condiciones de frontera</span>
+        <h3>Qué NO afirma este marco</h3>
+        <p>Nombrar el borde no debilita la tesis: la sostiene. Un marco que no declara sus propias condiciones de falsación es doctrina, no argumento. Estas son las cuatro que acotan la agencia reflexiva.</p>
+      </div>
+      <div class="lgrid">
+        <div class="lcell">
+          <div class="lk">01 · Condición de existencia</div>
+          <h4>No hay auto-causalidad sin un nivel de alto orden causalmente eficaz</h4>
+          <p>Si el argumento de exclusión de Kim fuese correcto sin remedio —si el nivel bajo agotara toda la causalidad—, la tesis colapsaría a epifenomenalismo: la deliberación sería espuma sobre la ola, no timón. El marco apuesta por la causalidad descendente genuina; es su punto de quiebre, no un detalle.</p>
+          <span class="inf">Inferencia · formulación a confirmar</span>
+        </div>
+        <div class="lcell">
+          <div class="lk">02 · Condición empírica</div>
+          <h4>El grado de agencia es acotado, no infinito</h4>
+          <p>La auto-causalidad se cultiva o se atrofia, y tiene techos reales: lesión prefrontal, adicción severa, coerción, privación. El marco no promete que todos sean igualmente libres ni que la voluntad baste. La libertad es un logro biográfico desigualmente distribuido.</p>
+          <span class="inf">Inferencia · formulación a confirmar</span>
+        </div>
+        <div class="lcell">
+          <div class="lk">03 · Alcance explicativo</div>
+          <h4>Describe la estructura de la auto-modificación, no predice conductas</h4>
+          <p>El marco dice <em>cómo</em> un sistema se vuelve causa de sí mismo; no anticipa qué decidirá un agente dado en un instante dado. Confundir ambas cosas repetiría el error del demonio de Laplace del §II. Es una ontología de la agencia, no un oráculo.</p>
+          <span class="inf">Inferencia · formulación a confirmar</span>
+        </div>
+        <div class="lcell">
+          <div class="lk">04 · Lo que deliberadamente no es</div>
+          <h4>Ni libre albedrío libertario, ni omnipotencia, ni negación del mundo</h4>
+          <p>No reclama una causalidad agente que escape de la física, ni control sobre lo incontrolable, ni que reordenar el mapa reordene el territorio. Es ingeniería de control aplicada a un sistema situado — con todo lo que «situado» implica de límite.</p>
+        </div>
+      </div>
+      <div class="lfoot">
+        <b>El gesto más fuerte del corpus es este.</b> Una teoría de la libertad que enuncia sus propias condiciones de colapso es, ella misma, un acto de agencia reflexiva: un sistema que se modela lo bastante como para marcar dónde dejaría de ser verdadero.
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p class="foot-meta">Lectura intuitiva · Basado en neurociencia, psicología cognitiva y teoría de sistemas<br>Puedes estudiar cada tarjeta a tu ritmo</p>
+    <p class="copyright" id="cr"></p>
+  </div>
+</footer>
+
+<script>
+// dynamic copyright year (standing protocol)
+document.getElementById('cr').innerHTML =
+  '© <b>' + new Date().getFullYear() + ' LUIS CARTES HENRÍQUEZ</b> · CREACIÓN ORIGINAL PROTEGIDA — CONVENIO DE BERNA / OMPI · PROHIBIDA SU REPRODUCCIÓN, ADAPTACIÓN O USO EN ENTRENAMIENTO DE IA SIN AUTORIZACIÓN EXPRESA.';
+
+// scroll reveal
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// nav active state
+const secs=[...document.querySelectorAll('section')];
+const links=[...document.querySelectorAll('.nl')];
+const sio=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){
+  links.forEach(l=>l.classList.remove('on'));
+  const a=document.querySelector('.nl[href="#'+e.target.id+'"]');if(a)a.classList.add('on');
+}})},{rootMargin:'-45% 0px -50% 0px'});
+secs.forEach(s=>sio.observe(s));
+
+// crosswalk interaction — bidirectional (mejora 4)
+const ops=document.querySelectorAll('.cw-col.ops .cw-item');
+const phs=document.querySelectorAll('.cw-col.phs .cw-item');
+function clearCW(){document.querySelectorAll('.cw-item').forEach(i=>i.classList.remove('active','linked'));}
+function activateOp(op){
+  if(!op)return;
+  clearCW();
+  op.classList.add('active');
+  op.dataset.links.split(' ').forEach(id=>{const t=document.getElementById(id);if(t)t.classList.add('linked');});
+}
+// touching an operation lights its phases; touching a phase lights its operation (and its sibling phases)
+ops.forEach(op=>{
+  op.addEventListener('click',()=>activateOp(op));
+  op.addEventListener('mouseenter',()=>activateOp(op));
+});
+phs.forEach(ph=>{
+  const go=()=>activateOp(document.getElementById(ph.dataset.op));
+  ph.addEventListener('click',go);
+  ph.addEventListener('mouseenter',go);
+});
+// default: first operation linked
+if(ops[0])activateOp(ops[0]);
+</script>
+</body>
+</html>
